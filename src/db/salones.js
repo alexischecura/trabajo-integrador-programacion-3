@@ -1,11 +1,41 @@
 import { conexion } from './conexion.js';
 
 export default class Salones {
-  
-  buscarSalones = async () => {
-    const querySQL = 'SELECT * FROM salones WHERE activo=1';
+  buscarSalones = async (options = {}) => {
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'salon_id',
+      order = 'ASC',
+      capacidad,
+      importeMax,
+    } = options;
 
-    const [salones] = await conexion.execute(querySQL);
+    const offset = (page - 1) * limit;
+
+    let querySQL = 'SELECT * FROM salones WHERE activo=1';
+    const values = [];
+
+    if (capacidad) {
+      querySQL += ' AND capacidad >= ?';
+      values.push(capacidad);
+    }
+
+    if (importeMax) {
+      querySQL += ' AND importe <= ?';
+      values.push(importeMax);
+    }
+
+    // Whitelist for sortBy columns to prevent SQL injection
+    const allowedSortBy = ['salon_id', 'titulo', 'capacidad', 'importe'];
+    if (allowedSortBy.includes(sortBy)) {
+      querySQL += ` ORDER BY ${sortBy} ${order === 'DESC' ? 'DESC' : 'ASC'}`;
+    }
+
+    querySQL += ' LIMIT ? OFFSET ?';
+    values.push(parseInt(limit, 10), parseInt(offset, 10));
+
+    const [salones] = await conexion.execute(querySQL, values);
 
     return salones;
   };
