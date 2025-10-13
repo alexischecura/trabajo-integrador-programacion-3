@@ -28,7 +28,27 @@ export default class SalonesServicio {
       return null;
     }
 
-    const resultado = await this.salones.actualizarSalon(salon_id, datos);
+    const camposPermitidos = [
+      'titulo',
+      'direccion',
+      'latitud',
+      'longitud',
+      'capacidad',
+      'importe',
+    ];
+    const datosFiltrados = Object.fromEntries(
+      Object.entries(datos).filter(([key]) => camposPermitidos.includes(key))
+    );
+
+    if (Object.keys(datosFiltrados).length === 0) {
+      // no hay campos válidos para actualizar
+      return null;
+    }
+
+    const resultado = await this.salones.actualizarSalon(
+      salon_id,
+      datosFiltrados
+    );
     return resultado.affectedRows > 0;
   };
 

@@ -94,15 +94,16 @@ export default class SalonesControlador {
       const salon_id = req.params.salon_id;
 
       const actualizado = await this.salones.actualizarSalon(salon_id, req.body);
-      cache.clear(); // Limpiar caché al actualizar
-
+      
       if (actualizado === null) {
-        return res.status(404).json({
+        return res.status(400).json({
           estado: false,
-          mensaje: `Salón con id ${salon_id} no encontrado`,
+          mensaje: `No hay datos válidos para actualizar o salón con id ${salon_id} no encontrado`,
         });
       }
-
+      
+      cache.clear(); // Limpiar caché al actualizar
+      
       res.json({
         estado: true,
         mensaje: `Salón con id ${salon_id} actualizado correctamente`,

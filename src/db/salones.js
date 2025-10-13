@@ -64,20 +64,20 @@ export default class Salones {
     return resultado;
   };
 
-  actualizarSalon = async (
-    salon_id,
-    { titulo, direccion, capacidad, importe }
-  ) => {
+  async actualizarSalon(salon_id, datosFiltrados) {
+    const campos = Object.keys(datosFiltrados);
+    const valores = Object.values(datosFiltrados);
+
+    const setCampos = campos.map((campo) => `${campo} = ?`).join(', ');
+
     const querySQL = `
-    UPDATE salones 
-    SET titulo = ?, direccion = ?, capacidad = ?, importe = ? 
+    UPDATE salones
+    SET ${setCampos}
     WHERE salon_id = ? AND activo = 1
   `;
-    const valores = [titulo, direccion, capacidad, importe, salon_id];
 
-    const [resultado] = await conexion.execute(querySQL, valores);
-    return resultado;
-  };
+    return conexion.execute(querySQL, [...valores, salon_id]);
+  }
 
   borrarSalon = async (salon_id) => {
     const querySQL = `
