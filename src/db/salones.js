@@ -33,7 +33,10 @@ export default class Salones {
     }
 
     querySQL += ' LIMIT ? OFFSET ?';
-    values.push(parseInt(limit, 10), parseInt(offset, 10));
+    values.push(
+      parseInt(limit, 10).toString(),
+      parseInt(offset, 10).toString()
+    );
 
     const [salones] = await conexion.execute(querySQL, values);
 
