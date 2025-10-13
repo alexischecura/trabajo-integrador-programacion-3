@@ -5,8 +5,8 @@ export default class SalonesServicio {
     this.salones = new Salones();
   }
 
-  buscarSalones = () => {
-    return this.salones.buscarSalones();
+  buscarSalones = (options) => {
+    return this.salones.buscarSalones(options);
   };
 
   buscarSalonPorId = async (salon_id) => {
