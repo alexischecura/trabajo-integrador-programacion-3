@@ -163,6 +163,14 @@ router.post(
   [
     body('titulo').notEmpty().withMessage('El título es obligatorio'),
     body('direccion').notEmpty().withMessage('La dirección es obligatoria'),
+    body('latitud')
+      .optional()
+      .isFloat({ min: -90, max: 90 })
+      .withMessage('La latitud debe ser un número entre -90 y 90'),
+    body('longitud')
+      .optional()
+      .isFloat({ min: -180, max: 180 })
+      .withMessage('La longitud debe ser un número entre -180 y 180'),
     body('capacidad')
       .isInt({ min: 1 })
       .withMessage('La capacidad debe ser un número entero mayor que 0'),
@@ -203,12 +211,28 @@ router.post(
 router.put(
   '/:salon_id',
   [
-    body('titulo').notEmpty().withMessage('El título es obligatorio'),
-    body('direccion').notEmpty().withMessage('La dirección es obligatoria'),
+    body('titulo')
+      .optional()
+      .notEmpty()
+      .withMessage('El título no puede estar vacío'),
+    body('direccion')
+      .optional()
+      .notEmpty()
+      .withMessage('La dirección no puede estar vacía'),
+    body('latitud')
+      .optional()
+      .isFloat({ min: -90, max: 90 })
+      .withMessage('La latitud debe ser un número entre -90 y 90'),
+    body('longitud')
+      .optional()
+      .isFloat({ min: -180, max: 180 })
+      .withMessage('La longitud debe ser un número entre -180 y 180'),
     body('capacidad')
+      .optional()
       .isInt({ min: 1 })
       .withMessage('La capacidad debe ser un número entero mayor que 0'),
     body('importe')
+      .optional()
       .isFloat({ min: 0 })
       .withMessage('El importe debe ser un número mayor o igual que 0'),
   ],
