@@ -1,4 +1,5 @@
 import Usuarios from '../db/usuarios.js';
+import AppError from '../utiles/AppError.js';
 
 const TIPOS_DE_USUARIO = {
   administrador: 1,
@@ -21,7 +22,8 @@ export default class UsuariosServicio {
 
   buscarUsuarioPorId = async (usuario_id) => {
     const resultado = await this.usuarios.buscarUsuarioPorId(usuario_id);
-    if (resultado.length === 0) return null;
+    if (resultado.length === 0)
+      throw new AppError(`Usuario con id ${usuario_id} no encontrado`, 404);
     return resultado[0];
   };
 
@@ -34,10 +36,9 @@ export default class UsuariosServicio {
   };
 
   actualizarUsuario = async (usuario_id, datos) => {
-    const usuario = await this.buscarUsuarioPorId(usuario_id);
-    if (!usuario) {
-      return null;
-    }
+    // La función buscarUsuarioPorId lanza una excepción/404 si el usuario no existe.
+    await this.buscarUsuarioPorId(usuario_id);
+
     const camposPermitidos = [
       'nombre',
       'apellido',
@@ -52,24 +53,26 @@ export default class UsuariosServicio {
     );
 
     if (Object.keys(datosFiltrados).length === 0) {
-      // no hay campos válidos para actualizar
-      return null;
+      throw new AppError('No hay campos válidos para actualizar', 400);
     }
 
     if (datosFiltrados.tipo_usuario) {
       datosFiltrados.tipo_usuario =
-        TIPOS_DE_USUARIO[datosFiltrados.tipo_usuario] || TIPOS_DE_USUARIO.cliente;
+        TIPOS_DE_USUARIO[datosFiltrados.tipo_usuario] ||
+        TIPOS_DE_USUARIO.cliente;
     }
 
-    const resultado = await this.usuarios.actualizarUsuario(usuario_id, datosFiltrados);
+    const resultado = await this.usuarios.actualizarUsuario(
+      usuario_id,
+      datosFiltrados
+    );
     return resultado.affectedRows > 0;
   };
 
   borrarUsuario = async (usuario_id) => {
-    const usuario = await this.buscarUsuarioPorId(usuario_id);
-    if (!usuario) {
-      return null;
-    }
+    // La función buscarUsuarioPorId lanza una excepción/404 si el usuario no existe.
+    await this.buscarUsuarioPorId(usuario_id);
+    
     const resultado = await this.usuarios.borrarUsuario(usuario_id);
     return resultado.affectedRows > 0;
   };

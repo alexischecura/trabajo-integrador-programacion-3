@@ -1,4 +1,5 @@
 import Servicios from '../db/servicios.js';
+import AppError from '../utiles/AppError.js';
 
 export default class ServiciosServicio {
   constructor() {
@@ -11,7 +12,8 @@ export default class ServiciosServicio {
 
   buscarServicioPorId = async (servicio_id) => {
     const resultado = await this.servicios.buscarServicioPorId(servicio_id);
-    if (resultado.length === 0) return null;
+    if (resultado.length === 0)
+      throw new AppError(`Servicio con id ${servicio_id} no encontrado`, 404);
     return resultado[0];
   };
 
@@ -21,10 +23,8 @@ export default class ServiciosServicio {
   };
 
   actualizarServicio = async (servicio_id, datos) => {
-    const servicio = await this.buscarServicioPorId(servicio_id);
-    if (!servicio) {
-      return null;
-    }
+    // La función buscarServicioPorId lanza una excepción/404 si el servicio no existe.
+    await this.buscarServicioPorId(servicio_id);
 
     const camposPermitidos = ['descripcion', 'importe'];
     const datosFiltrados = Object.fromEntries(
@@ -32,19 +32,20 @@ export default class ServiciosServicio {
     );
 
     if (Object.keys(datosFiltrados).length === 0) {
-      // no hay campos válidos para actualizar
-      return null;
+      throw new AppError('No hay campos válidos para actualizar', 400);
     }
 
-    const resultado = await this.servicios.actualizarServicio(servicio_id, datosFiltrados);
+    const resultado = await this.servicios.actualizarServicio(
+      servicio_id,
+      datosFiltrados
+    );
     return resultado.affectedRows > 0;
   };
 
   borrarServicio = async (servicio_id) => {
-    const servicio = await this.buscarServicioPorId(servicio_id);
-    if (!servicio) {
-      return null;
-    }
+    // La función buscarServicioPorId lanza una excepción/404 si el servicio no existe.
+    await this.buscarServicioPorId(servicio_id);
+    
     const resultado = await this.servicios.borrarServicio(servicio_id);
     return resultado.affectedRows > 0;
   };

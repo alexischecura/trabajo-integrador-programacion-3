@@ -1,4 +1,5 @@
 import Salones from '../db/salones.js';
+import AppError from '../utiles/AppError.js';
 
 export default class SalonesServicio {
   constructor() {
@@ -12,7 +13,9 @@ export default class SalonesServicio {
   buscarSalonPorId = async (salon_id) => {
     const resultado = await this.salones.buscarSalonPorId(salon_id);
 
-    if (resultado.length === 0) return null;
+    if (resultado.length === 0) {
+      throw new AppError(`Salón con id ${salon_id} no encontrado`, 404);
+    }
 
     return resultado[0];
   };
@@ -23,10 +26,8 @@ export default class SalonesServicio {
   };
 
   actualizarSalon = async (salon_id, datos) => {
-    const salon = await this.buscarSalonPorId(salon_id);
-    if (!salon) {
-      return null;
-    }
+    // La función buscarSalonPorId lanza una excepción/404 si el salón no existe.
+    await this.buscarSalonPorId(salon_id);
 
     const camposPermitidos = [
       'titulo',
@@ -41,8 +42,7 @@ export default class SalonesServicio {
     );
 
     if (Object.keys(datosFiltrados).length === 0) {
-      // no hay campos válidos para actualizar
-      return null;
+      throw new AppError('No hay campos válidos para actualizar', 400);
     }
 
     const resultado = await this.salones.actualizarSalon(
@@ -53,10 +53,8 @@ export default class SalonesServicio {
   };
 
   borrarSalon = async (salon_id) => {
-    const salon = await this.buscarSalonPorId(salon_id);
-    if (!salon) {
-      return null;
-    }
+    // La función buscarSalonPorId lanza una excepción/404 si el salón no existe.
+    await this.buscarSalonPorId(salon_id);
 
     const resultado = await this.salones.borrarSalon(salon_id);
     return resultado.affectedRows > 0;
