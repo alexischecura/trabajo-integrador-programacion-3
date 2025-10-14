@@ -1,16 +1,32 @@
 import { validationResult } from 'express-validator';
+import cache from 'memory-cache';
 import UsuariosServicio from '../servicios/usuariosServicio.js';
 
 export default class UsuariosControlador {
   constructor() {
     this.usuarios = new UsuariosServicio();
+    this.cacheDuration = 5 * 60 * 1000; // 5 minutos en milisegundos
   }
 
   buscarUsuarios = async (req, res) => {
     try {
-      const usuarios = await this.usuarios.buscarUsuarios();
+      const cacheKey = `usuarios_${JSON.stringify(req.query)}`;
+      const cachedData = cache.get(cacheKey);
+
+      if (cachedData) {
+        return res.json({
+          estado: true,
+          origen: 'cache',
+          datos: cachedData,
+        });
+      }
+
+      const usuarios = await this.usuarios.buscarUsuarios(req.query);
+      cache.put(cacheKey, usuarios, this.cacheDuration);
+
       res.json({
         estado: true,
+        origen: 'db',
         datos: usuarios,
       });
     } catch (error) {
@@ -52,6 +68,8 @@ export default class UsuariosControlador {
 
     try {
       const idNuevo = await this.usuarios.crearUsuario(req.body);
+      cache.clear(); // Limpiar caché al crear
+
       res.status(201).json({
         estado: true,
         mensaje: `Usuario creado con id ${idNuevo}`,
@@ -74,12 +92,16 @@ export default class UsuariosControlador {
     try {
       const usuario_id = req.params.usuario_id;
 
-      const actualizado = await this.usuarios.actualizarUsuario(usuario_id, req.body);
+      const actualizado = await this.usuarios.actualizarUsuario(
+        usuario_id,
+        req.body
+      );
+      cache.clear(); // Limpiar caché al actualizar
 
       if (actualizado === null) {
-        return res.status(404).json({
+        return res.status(400).json({
           estado: false,
-          mensaje: `Usuario con id ${usuario_id} no encontrado`,
+          mensaje: `No hay datos válidos para actualizar o usuario con id ${usuario_id} no encontrado`,
         });
       }
 
