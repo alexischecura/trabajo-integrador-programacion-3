@@ -1,16 +1,33 @@
 import { validationResult } from 'express-validator';
+import cache from 'memory-cache';
 import ServiciosServicio from '../servicios/serviciosServicio.js';
 
 export default class ServiciosControlador {
   constructor() {
     this.servicios = new ServiciosServicio();
+    this.cacheDuration = 5 * 60 * 1000; // 5 minutos en milisegundos
   }
 
   buscarServicios = async (req, res) => {
     try {
-      const servicios = await this.servicios.buscarServicios();
+      const cacheKey = `servicios_${JSON.stringify(req.query)}`;
+      const cachedData = cache.get(cacheKey);
+
+      if (cachedData) {
+        return res.json({
+          estado: true,
+          origen: 'cache',
+          datos: cachedData,
+        });
+      }
+
+      const servicios = await this.servicios.buscarServicios(req.query);
+
+      cache.put(cacheKey, servicios, this.cacheDuration);
+
       res.json({
         estado: true,
+        origen: 'db',
         datos: servicios,
       });
     } catch (error) {
@@ -52,6 +69,8 @@ export default class ServiciosControlador {
 
     try {
       const idNuevo = await this.servicios.crearServicio(req.body);
+      cache.clear();
+
       res.status(201).json({
         estado: true,
         mensaje: `Servicio creado con id ${idNuevo}`,
@@ -74,14 +93,19 @@ export default class ServiciosControlador {
     try {
       const servicio_id = req.params.servicio_id;
 
-      const actualizado = await this.servicios.actualizarServicio(servicio_id, req.body);
+      const actualizado = await this.servicios.actualizarServicio(
+        servicio_id,
+        req.body
+      );
+      cache.clear(); 
 
       if (actualizado === null) {
-        return res.status(404).json({
+        return res.status(400).json({
           estado: false,
-          mensaje: `Servicio con id ${servicio_id} no encontrado`,
+          mensaje: `No hay datos válidos para actualizar o servicio con id ${servicio_id} no encontrado`,
         });
       }
+
 
       res.json({
         estado: true,
@@ -100,6 +124,7 @@ export default class ServiciosControlador {
     try {
       const servicio_id = req.params.servicio_id;
       const borrado = await this.servicios.borrarServicio(servicio_id);
+      cache.clear(); // Limpiar caché al borrar
 
       if (borrado === null) {
         return res.status(404).json({

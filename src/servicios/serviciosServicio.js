@@ -5,8 +5,8 @@ export default class ServiciosServicio {
     this.servicios = new Servicios();
   }
 
-  buscarServicios = () => {
-    return this.servicios.buscarServicios();
+  buscarServicios = (options) => {
+    return this.servicios.buscarServicios(options);
   };
 
   buscarServicioPorId = async (servicio_id) => {
@@ -25,7 +25,18 @@ export default class ServiciosServicio {
     if (!servicio) {
       return null;
     }
-    const resultado = await this.servicios.actualizarServicio(servicio_id, datos);
+
+    const camposPermitidos = ['descripcion', 'importe'];
+    const datosFiltrados = Object.fromEntries(
+      Object.entries(datos).filter(([key]) => camposPermitidos.includes(key))
+    );
+
+    if (Object.keys(datosFiltrados).length === 0) {
+      // no hay campos válidos para actualizar
+      return null;
+    }
+
+    const resultado = await this.servicios.actualizarServicio(servicio_id, datosFiltrados);
     return resultado.affectedRows > 0;
   };
 

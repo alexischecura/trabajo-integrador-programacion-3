@@ -76,7 +76,9 @@ export default class Salones {
     WHERE salon_id = ? AND activo = 1
   `;
 
-    return conexion.execute(querySQL, [...valores, salon_id]);
+    const [resultado] = await conexion.execute(querySQL, [...valores, salon_id]);
+
+    return resultado;
   }
 
   borrarSalon = async (salon_id) => {
