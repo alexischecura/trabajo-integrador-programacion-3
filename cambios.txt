@@ -66,3 +66,27 @@ Se han implementado varias mejoras y funcionalidades en la entidad `salones` par
     *   Resultado
     *   Los endpoints ahora validan correctamente los datos de entrada y devuelven errores más claros y descriptivos.
     *   El sistema mantiene compatibilidad con los endpoints existentes (/api/v1/salones, /usuarios, /servicios).
+
+9. **Mejoras en el Sistema de Validación y Manejo de Errores**
+    * Se implementó una nueva clase `AppError` para manejar errores de forma consistente.
+    * Se actualizó el middleware `validarInputs` para usar la nueva clase `AppError`.
+    * Se mejoró el formato de los errores de validación incluyendo:
+        - Campo afectado
+        - Mensaje descriptivo
+        - Valor que causó el error
+    * Se estandarizó el manejo de parámetros de ordenamiento (ASC/DESC) en todas las consultas.
+    * Se agregaron validaciones para los endpoints de listado en:
+        - Salones
+        - Servicios 
+        - Usuarios
+    * Se mejoró la validación de nombres de usuario duplicados.
+    * Se implementó manejo de errores consistente en todos los controladores.
+    * Se actualizaron las respuestas de error para incluir información más detallada y útil.
+
+10. **Actualización de la Documentación**
+    * Se mejoró el formato del README.md con una estructura más clara.
+    * Se actualizó la colección de pruebas de API:
+        - Renombrada a "Reservas-burno-coleccion.json"
+        - Actualizados los ejemplos de requests
+        - Agregados nuevos casos de prueba para validaciones
+    * Se eliminaron archivos redundantes o desactualizados.
