@@ -1,4 +1,4 @@
-import app from "./app.js";
+import app from "./reservas.js";
 import { conectarDB } from "./db/conexion.js";
 
 const port = process.env.PORT || 3000;
