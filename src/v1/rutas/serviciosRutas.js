@@ -1,6 +1,8 @@
 import express from 'express';
 import { body } from 'express-validator';
 import ServiciosControlador from '../../controladores/serviciosControlador.js';
+import { crearServicioValidations, actualizarServicioValidations } from '../../validations/serviciosValidations.js';
+import { validarInputs } from '../../middlewares/validarInputs.js';
 
 const serviciosControlador = new ServiciosControlador();
 
@@ -118,6 +120,7 @@ router.get('/', serviciosControlador.buscarServicios);
  */
 router.get('/:servicio_id', serviciosControlador.buscarServicioPorId);
 
+
 /**
  * @swagger
  * /servicios:
@@ -141,16 +144,7 @@ router.get('/:servicio_id', serviciosControlador.buscarServicioPorId);
  *       400:
  *         description: Datos de entrada inválidos.
  */
-router.post(
-  '/',
-  [
-    body('descripcion').notEmpty().withMessage('La descripción es obligatoria'),
-    body('importe')
-      .isFloat({ min: 0 })
-      .withMessage('El importe debe ser un número mayor o igual que 0'),
-  ],
-  serviciosControlador.crearServicio
-);
+router.post('/', crearServicioValidations, validarInputs, serviciosControlador.crearServicio);
 
 /**
  * @swagger
@@ -179,20 +173,7 @@ router.post(
  *       404:
  *         description: Servicio no encontrado.
  */
-router.put(
-  '/:servicio_id',
-  [
-    body('descripcion')
-      .optional()
-      .notEmpty()
-      .withMessage('La descripción no puede estar vacía'),
-    body('importe')
-      .optional()
-      .isFloat({ min: 0 })
-      .withMessage('El importe debe ser un número mayor o igual que 0'),
-  ],
-  serviciosControlador.actualizarServicio
-);
+router.put('/:servicio_id', actualizarServicioValidations, validarInputs, serviciosControlador.actualizarServicio);
 
 /**
  * @swagger

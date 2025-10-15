@@ -49,16 +49,6 @@ export default class UsuariosControlador {
   };
 
   crearUsuario = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const validationErrores = errors.array();
-      const error = new AppError(
-        'Error de validación en los datos de entrada.',
-        400
-      );
-      error.data = validationErrores;
-      return next(error);
-    }
 
     try {
       const idNuevo = await this.usuarios.crearUsuario(req.body);
@@ -74,18 +64,8 @@ export default class UsuariosControlador {
     }
   };
 
+  actualizarUsuario = async (req, res) => {
 
-  actualizarUsuario = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const validationErrores = errors.array();
-      const error = new AppError(
-        'Error de validación en los datos de entrada.',
-        400
-      );
-      error.data = validationErrores;
-      return next(error);
-    }
     try {
       const usuario_id = req.params.usuario_id;
 

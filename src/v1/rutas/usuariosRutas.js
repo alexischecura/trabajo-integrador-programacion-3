@@ -1,6 +1,8 @@
 import express from 'express';
 import { body } from 'express-validator';
 import UsuariosControlador from '../../controladores/usuariosControlador.js';
+import { crearUsuarioValidations, actualizarUsuarioValidations } from '../../validations/usuariosValidations.js';
+import { validarInputs } from '../../middlewares/validarInputs.js';
 
 const usuariosControlador = new UsuariosControlador();
 
@@ -172,21 +174,7 @@ router.get('/:usuario_id', usuariosControlador.buscarUsuarioPorId);
  *       400:
  *         description: Datos de entrada inválidos.
  */
-router.post(
-  '/',
-  [
-    body('nombre').notEmpty().withMessage('El nombre es obligatorio'),
-    body('apellido').notEmpty().withMessage('El apellido es obligatorio'),
-    body('nombre_usuario')
-      .notEmpty()
-      .withMessage('El nombre de usuario es obligatorio'),
-    body('contrasenia').notEmpty().withMessage('La contraseña es obligatoria'),
-    body('tipo_usuario')
-      .isIn(['cliente', 'empleado', 'administrador'])
-      .withMessage('Tipo de usuario inválido'),
-  ],
-  usuariosControlador.crearUsuario
-);
+router.post('/', crearUsuarioValidations, validarInputs, usuariosControlador.crearUsuario);
 
 /**
  * @swagger
@@ -215,18 +203,7 @@ router.post(
  *       404:
  *         description: Usuario no encontrado.
  */
-router.put(
-  '/:usuario_id',
-  [
-    body('nombre').notEmpty().optional(),
-    body('apellido').notEmpty().optional(),
-    body('nombre_usuario').notEmpty().optional(),
-    body('tipo_usuario').notEmpty().optional()
-      .isIn(['cliente', 'empleado', 'administrador'])
-      .withMessage('Tipo de usuario inválido'),
-  ],
-  usuariosControlador.actualizarUsuario
-);
+router.put('/:usuario_id', actualizarUsuarioValidations, validarInputs, usuariosControlador.actualizarUsuario);
 
 /**
  * @swagger

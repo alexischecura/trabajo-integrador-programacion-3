@@ -49,15 +49,16 @@ export default class Usuarios {
     return resultado;
   };
 
-  crearUsuario = async ({
-    nombre,
-    apellido,
-    nombre_usuario,
-    contrasenia,
-    tipo_usuario,
-    celular,
-    foto,
-  }) => {
+  buscarUsuarioPorNombre = async (nombre_usuario) => {
+    const querySQL = `
+      SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto 
+      FROM usuarios 
+      WHERE activo=1 AND nombre_usuario = ?`;
+    const [resultado] = await conexion.execute(querySQL, [nombre_usuario]);
+    return resultado.length ? resultado[0] : null;
+  };
+
+  crearUsuario = async ({ nombre, apellido, nombre_usuario, contrasenia, tipo_usuario, celular, foto }) => {
     const querySQL = `
       INSERT INTO usuarios (nombre, apellido, nombre_usuario, contrasenia, tipo_usuario, celular, foto) 
       VALUES (?,?,?,?,?,?,?)`;

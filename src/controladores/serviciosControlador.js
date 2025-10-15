@@ -48,17 +48,7 @@ export default class ServiciosControlador {
     }
   };
 
-  crearServicio = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const validationErrores = errors.array();
-      const error = new AppError(
-        'Error de validación en los datos de entrada.',
-        400
-      );
-      error.data = validationErrores;
-      return next(error);
-    }
+  crearServicio = async (req, res) => {
 
     try {
       const idNuevo = await this.servicios.crearServicio(req.body);
@@ -74,17 +64,7 @@ export default class ServiciosControlador {
     }
   };
 
-  actualizarServicio = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const validationErrores = errors.array();
-      const error = new AppError(
-        'Error de validación en los datos de entrada.',
-        400
-      );
-      error.data = validationErrores;
-      return next(error);
-    }
+  actualizarServicio = async (req, res) => {
 
     try {
       const servicio_id = req.params.servicio_id;
