@@ -54,3 +54,15 @@ Se han implementado varias mejoras y funcionalidades en la entidad `salones` par
     *   Se implementaron las operaciones CRUD (Crear, Leer, Actualizar, Eliminar lógicamente) para la entidad `servicios`.
     *   Se añadió la ruta `/api/v1/servicios` en `src/app.js` para exponer los endpoints de servicios.
     *   Se incluyeron validaciones básicas para la creación y actualización de servicios.
+8. **Se implementaron mejoras en la validación de datos y el manejo básico de errores en el backend del proyecto.**
+    *   Cambios realizados
+    *   Agregadas validaciones adicionales en los controladores de salones, usuarios y servicios utilizando express-validator.
+    *   Incorporado un middleware de validaciones (validarInputs) para centralizar la verificación de errores y mantener los controladores más limpios.
+    *   Implementada validación de tipo de datos y campos requeridos en cada entidad.
+    *   Agregada validación de unicidad del campo nombre_usuario al crear nuevos usuarios.
+    *   Ajustado el manejo de errores en los controladores para devolver códigos HTTP apropiados (400 o 500) según el tipo de fallo.
+    *   Refactor menor en los métodos de servicios para coherencia con las nuevas validaciones.
+
+    *   Resultado
+    *   Los endpoints ahora validan correctamente los datos de entrada y devuelven errores más claros y descriptivos.
+    *   El sistema mantiene compatibilidad con los endpoints existentes (/api/v1/salones, /usuarios, /servicios).
