@@ -1,0 +1,773 @@
+{
+  "name": "Reservas",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "Reservas",
+      "filename": "Reservas",
+      "seq": 2,
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Reservas",
+          "seq": 2
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Notificación",
+          "filename": "Notificación.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/notificacion",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"fecha\": \"29/09/2025\",\n  \"salon\": \"Salón 1\",\n  \"turno\": \"16:30\",\n  \"correoDestino\": \"alexischecura@gmail.com\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Salones",
+      "filename": "Salones",
+      "seq": 3,
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Salones",
+          "seq": 3
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Actualizar salón",
+          "filename": "Actualizar salón.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/salones/:salon_id",
+            "method": "PUT",
+            "headers": [],
+            "params": [
+              {
+                "name": "salon_id",
+                "value": "13",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"titulo\": \"Salón Amarillo\",\n  \"direccion\": \"Ruta 123\",\n  \"capacidad\": 50,\n  \"latitud\": 50.3,\n  \"longitud\": 50.3  \n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Crear un salón",
+          "filename": "Crear un salón.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/salones",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"titulo\": \"Salón Rojo\",\n  \"direccion\": \"Ruta 123\",\n  \"capacidad\": 500,\n  \"importe\": 150000\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Eliminar salón",
+          "filename": "Eliminar salón.bru",
+          "seq": 5,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/salones/:salon_id",
+            "method": "DELETE",
+            "headers": [],
+            "params": [
+              {
+                "name": "salon_id",
+                "value": "0",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener salones",
+          "filename": "Obtener salones.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/salones?page=1&order=desc",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "order",
+                "value": "desc",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "limit",
+                "value": "5",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "sortBy",
+                "value": "titulo",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "importeMax",
+                "value": "15000",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "capacidad",
+                "value": "51",
+                "type": "query",
+                "enabled": false
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener salón",
+          "filename": "Obtener salón.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/salones/:salon_id",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "salon_id",
+                "value": "13",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Servicios",
+      "filename": "Servicios",
+      "seq": 4,
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Servicios",
+          "seq": 4
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Actualizar servicio",
+          "filename": "Actualizar servicio.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/servicios/:servicio_id",
+            "method": "PUT",
+            "headers": [],
+            "params": [
+              {
+                "name": "servicio_id",
+                "value": "15",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"descripcion\": \"Servicio de te\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Crear un servicio",
+          "filename": "Crear un servicio.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/servicios",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"descripcion\": \"Servicio de café\",\n  \"importe\": 15000\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Eliminar servicio",
+          "filename": "Eliminar servicio.bru",
+          "seq": 5,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/servicios/:servicio_id",
+            "method": "DELETE",
+            "headers": [],
+            "params": [
+              {
+                "name": "servicio_id",
+                "value": "15",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener servicio",
+          "filename": "Obtener servicio.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/servicios/:servicio_id",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "servicio_id",
+                "value": "15",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener servicios",
+          "filename": "Obtener servicios.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/servicios?page=1&limit=5&sortBy=importe&order=desc",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "limit",
+                "value": "5",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "sortBy",
+                "value": "importe",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "order",
+                "value": "desc",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "importeMax",
+                "value": "15000",
+                "type": "query",
+                "enabled": false
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Usuarios",
+      "filename": "Usuarios",
+      "seq": 5,
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Usuarios",
+          "seq": 5
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Actualizar usuario",
+          "filename": "Actualizar usuario.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/usuarios/:usuario_id",
+            "method": "PUT",
+            "headers": [],
+            "params": [
+              {
+                "name": "usuario_id",
+                "value": "9",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"nombre\": \"Pablo\",\n  \"apellido\": \"Rodriguez\",\n  \"nombre_usuario\": \"pabloRodriguez\",\n  \"contrasenia\": \"pablo1234\",\n  \"tipo_usuario\": \"cliente\",\n  \"celular\": \"261555555\",\n  \"foto\": \"https://dummyjson.com/icon/michaelw/128\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Crear un usuario",
+          "filename": "Crear un usuario.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/usuarios",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"nombre_usuario\": \"juanPerez\",\n  \"contrasenia\": \"juan12345\",\n  \"tipo_usuario\": \"cliente\",\n  \"celular\": \"+5491112345678\",\n  \"foto\": \"https://dummyjson.com/icon/michaelw/128\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Eliminar usuario",
+          "filename": "Eliminar usuario.bru",
+          "seq": 5,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/usuarios/:usuario_id",
+            "method": "DELETE",
+            "headers": [],
+            "params": [
+              {
+                "name": "usuario_id",
+                "value": "9",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener usuario",
+          "filename": "Obtener usuario.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/usuarios/:usuario_id",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "usuario_id",
+                "value": "10",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener usuarios",
+          "filename": "Obtener usuarios.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/usuarios?page=1&order=desc",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "order",
+                "value": "desc",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "limit",
+                "value": "5",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "sortBy",
+                "value": "nombre",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "tipoUsuario",
+                "value": "cliente",
+                "type": "query",
+                "enabled": false
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "activeEnvironmentUid": "qY81N6cTyjGqjWz6Ybk6M",
+  "environments": [
+    {
+      "variables": [
+        {
+          "name": "apiURL",
+          "value": "http://localhost:3000/api/v1",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        }
+      ],
+      "name": "Reserva de salones"
+    }
+  ],
+  "brunoConfig": {
+    "version": "1",
+    "name": "Reservas",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "size": 0.0045490264892578125,
+    "filesCount": 21
+  }
+}

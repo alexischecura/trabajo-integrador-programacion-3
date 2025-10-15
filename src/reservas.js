@@ -6,6 +6,8 @@ import { swaggerSpec } from './v1/swagger.js';
 import { router as salonesRutasV1 } from './v1/rutas/salonesRutas.js';
 import { router as usuariosRutasV1 } from './v1/rutas/usuariosRutas.js';
 import { router as serviciosRutasV1 } from './v1/rutas/serviciosRutas.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import AppError from './utiles/AppError.js';
 
 const app = express();
 
@@ -18,5 +20,16 @@ app.use('/api/v1/servicios', serviciosRutasV1);
 
 // Documentación de Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use((req, res, next) => {
+  next(
+    new AppError(
+      `No se encuentra la ruta ${req.originalUrl} en este servidor`,
+      404
+    )
+  );
+});
+
+app.use(errorHandler);
 
 export default app;

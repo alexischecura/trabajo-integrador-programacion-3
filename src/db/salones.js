@@ -29,11 +29,14 @@ export default class Salones {
     // Whitelist for sortBy columns to prevent SQL injection
     const allowedSortBy = ['salon_id', 'titulo', 'capacidad', 'importe'];
     if (allowedSortBy.includes(sortBy)) {
-      querySQL += ` ORDER BY ${sortBy} ${order === 'DESC' ? 'DESC' : 'ASC'}`;
+      querySQL += ` ORDER BY ${sortBy} ${order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'}`;
     }
 
     querySQL += ' LIMIT ? OFFSET ?';
-    values.push(parseInt(limit, 10), parseInt(offset, 10));
+    values.push(
+      parseInt(limit, 10).toString(),
+      parseInt(offset, 10).toString()
+    );
 
     const [salones] = await conexion.execute(querySQL, values);
 
@@ -61,20 +64,22 @@ export default class Salones {
     return resultado;
   };
 
-  actualizarSalon = async (
-    salon_id,
-    { titulo, direccion, capacidad, importe }
-  ) => {
+  async actualizarSalon(salon_id, datosFiltrados) {
+    const campos = Object.keys(datosFiltrados);
+    const valores = Object.values(datosFiltrados);
+
+    const setCampos = campos.map((campo) => `${campo} = ?`).join(', ');
+
     const querySQL = `
-    UPDATE salones 
-    SET titulo = ?, direccion = ?, capacidad = ?, importe = ? 
+    UPDATE salones
+    SET ${setCampos}
     WHERE salon_id = ? AND activo = 1
   `;
-    const valores = [titulo, direccion, capacidad, importe, salon_id];
 
-    const [resultado] = await conexion.execute(querySQL, valores);
+    const [resultado] = await conexion.execute(querySQL, [...valores, salon_id]);
+
     return resultado;
-  };
+  }
 
   borrarSalon = async (salon_id) => {
     const querySQL = `
