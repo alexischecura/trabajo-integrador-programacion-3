@@ -31,7 +31,7 @@ export const listarSalonesValidations = [
   query('page').optional().isInt({ min: 1 }).withMessage('page debe ser entero >= 1'),
   query('limit').optional().isInt({ min: 1 }).withMessage('limit debe ser entero >= 1'),
   query('sortBy').optional().isString(),
-  query('order').optional().isIn(['ASC', 'DESC']).withMessage('order debe ser ASC o DESC'),
+  query('order').optional().trim().toUpperCase().isIn(['ASC', 'DESC']).withMessage('order debe ser ASC o DESC'),,
   query('capacidad').optional().isInt({ min: 1 }).withMessage('capacidad debe ser entero >=1'),
   query('importeMax').optional().isFloat({ min: 0 }).withMessage('importeMax debe ser número >= 0'),
 ];

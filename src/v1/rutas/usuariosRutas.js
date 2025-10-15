@@ -1,7 +1,6 @@
 import express from 'express';
-import { body } from 'express-validator';
 import UsuariosControlador from '../../controladores/usuariosControlador.js';
-import { crearUsuarioValidations, actualizarUsuarioValidations } from '../../validations/usuariosValidations.js';
+import { crearUsuarioValidations, actualizarUsuarioValidations, listarUsuariosValidations } from '../../validations/usuariosValidations.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 
 const usuariosControlador = new UsuariosControlador();
@@ -113,7 +112,7 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Usuario'
  */
-router.get('/', usuariosControlador.buscarUsuarios);
+router.get('/', listarUsuariosValidations, validarInputs, usuariosControlador.buscarUsuarios);
 
 /**
  * @swagger

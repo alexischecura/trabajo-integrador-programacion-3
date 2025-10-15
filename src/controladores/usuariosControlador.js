@@ -48,8 +48,7 @@ export default class UsuariosControlador {
     }
   };
 
-  crearUsuario = async (req, res) => {
-
+  crearUsuario = async (req, res, next) => {
     try {
       const idNuevo = await this.usuarios.crearUsuario(req.body);
       cache.clear(); // Limpiar caché al crear
@@ -64,8 +63,7 @@ export default class UsuariosControlador {
     }
   };
 
-  actualizarUsuario = async (req, res) => {
-
+  actualizarUsuario = async (req, res, next) => {
     try {
       const usuario_id = req.params.usuario_id;
 

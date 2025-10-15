@@ -29,7 +29,7 @@ export default class Salones {
     // Whitelist for sortBy columns to prevent SQL injection
     const allowedSortBy = ['salon_id', 'titulo', 'capacidad', 'importe'];
     if (allowedSortBy.includes(sortBy)) {
-      querySQL += ` ORDER BY ${sortBy} ${order === 'DESC' ? 'DESC' : 'ASC'}`;
+      querySQL += ` ORDER BY ${sortBy} ${order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'}`;
     }
 
     querySQL += ' LIMIT ? OFFSET ?';

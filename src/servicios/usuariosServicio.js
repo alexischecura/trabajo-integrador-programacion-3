@@ -28,17 +28,16 @@ export default class UsuariosServicio {
   };
 
   buscarPorNombreUsuario = async (nombre_usuario) => {
-    const resultado = await this.usuarios.buscarUsuarioPorNombre(nombre_usuario);
-    return resultado; 
-  }
-
+    const resultado = await this.usuarios.buscarUsuarioPorNombre(
+      nombre_usuario
+    );
+    return resultado;
+  };
 
   crearUsuario = async (datos) => {
     const existente = await this.buscarPorNombreUsuario(datos.nombre_usuario);
     if (existente) {
-      const err = new Error('El nombre de usuario ya está en uso');
-      err.status = 400;
-      throw err;
+      throw new AppError('El nombre de usuario ya está en uso', 400);
     }
     datos.tipo_usuario =
       TIPOS_DE_USUARIO[datos.tipo_usuario] || TIPOS_DE_USUARIO.cliente;
@@ -84,7 +83,7 @@ export default class UsuariosServicio {
   borrarUsuario = async (usuario_id) => {
     // La función buscarUsuarioPorId lanza una excepción/404 si el usuario no existe.
     await this.buscarUsuarioPorId(usuario_id);
-    
+
     const resultado = await this.usuarios.borrarUsuario(usuario_id);
     return resultado.affectedRows > 0;
   };

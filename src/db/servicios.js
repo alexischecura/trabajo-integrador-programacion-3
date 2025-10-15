@@ -21,7 +21,7 @@ export default class Servicios {
 
     const allowedSortBy = ['servicio_id', 'descripcion', 'importe'];
     if (allowedSortBy.includes(sortBy)) {
-      querySQL += ` ORDER BY ${sortBy} ${order === 'DESC' ? 'DESC' : 'ASC'}`;
+      querySQL += ` ORDER BY ${sortBy} ${order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'}`;
     }
 
     querySQL += ` LIMIT ? OFFSET ?`;

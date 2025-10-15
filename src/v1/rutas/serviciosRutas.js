@@ -1,7 +1,6 @@
 import express from 'express';
-import { body } from 'express-validator';
 import ServiciosControlador from '../../controladores/serviciosControlador.js';
-import { crearServicioValidations, actualizarServicioValidations } from '../../validations/serviciosValidations.js';
+import { crearServicioValidations, actualizarServicioValidations, listarServiciosValidations } from '../../validations/serviciosValidations.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 
 const serviciosControlador = new ServiciosControlador();
@@ -93,7 +92,7 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Servicio'
  */
-router.get('/', serviciosControlador.buscarServicios);
+router.get('/', listarServiciosValidations, validarInputs, serviciosControlador.buscarServicios);
 
 /**
  * @swagger

@@ -1,4 +1,4 @@
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 
 export const crearUsuarioValidations = [
   body('nombre').trim().notEmpty().withMessage('El nombre es obligatorio'),
@@ -26,4 +26,13 @@ export const actualizarUsuarioValidations = [
   body('tipo_usuario').optional().isIn(['cliente', 'empleado', 'administrador']).withMessage('Tipo de usuario inválido'),
   body('celular').optional().isMobilePhone('es-AR').withMessage('Número de celular no válido'),
   body('foto').optional().isString().withMessage('La foto debe ser una cadena de texto'),
+];
+
+export const listarUsuariosValidations = [
+  // opcionales: page, limit, sortBy, order, capacidad, importeMax
+  query('page').optional().isInt({ min: 1 }).withMessage('page debe ser entero >= 1'),
+  query('limit').optional().isInt({ min: 1 }).withMessage('limit debe ser entero >= 1'),
+  query('sortBy').optional().isString(),
+  query('order').optional().trim().toUpperCase().isIn(['ASC', 'DESC']).withMessage('order debe ser ASC o DESC'),
+  query('tipoUsuario').optional().isIn(['cliente', 'empleado', 'administrador']).withMessage('tipoUsuario debe ser uno de los siguientes: cliente, empleado, administrador'),
 ];

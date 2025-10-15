@@ -1,5 +1,4 @@
 import express from 'express';
-import { body } from 'express-validator';
 import SalonesControlador from '../../controladores/salonesControlador.js';
 import { crearSalonValidations, actualizarSalonValidations, idParamSalon, listarSalonesValidations } from '../../validations/salonesValidations.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
