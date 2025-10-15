@@ -15,7 +15,19 @@ export default class UsuariosServicio {
     return resultado[0];
   };
 
+  buscarPorNombreUsuario = async (nombre_usuario) => {
+    const resultado = await this.usuarios.buscarUsuarioPorNombre(nombre_usuario);
+    return resultado; 
+  }
+
+
   crearUsuario = async (datos) => {
+    const existente = await this.buscarPorNombreUsuario(datos.nombre_usuario);
+    if (existente) {
+      const err = new Error('El nombre de usuario ya está en uso');
+      err.status = 400;
+      throw err;
+    }
     const resultado = await this.usuarios.crearUsuario(datos);
     return resultado.insertId;
   };

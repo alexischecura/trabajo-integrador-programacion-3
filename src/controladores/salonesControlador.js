@@ -62,10 +62,6 @@ export default class SalonesControlador {
   };
 
   crearSalon = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
 
     try {
       const idNuevo = await this.salones.crearSalon(req.body);
@@ -85,10 +81,6 @@ export default class SalonesControlador {
   };
 
   actualizarSalon = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
 
     try {
       const salon_id = req.params.salon_id;

@@ -1,6 +1,8 @@
 import express from 'express';
 import { body } from 'express-validator';
 import SalonesControlador from '../../controladores/salonesControlador.js';
+import { crearSalonValidations, actualizarSalonValidations, idParamSalon, listarSalonesValidations } from '../../validations/salonesValidations.js';
+import { validarInputs } from '../../middlewares/validarInputs.js';
 
 const salonesControlador = new SalonesControlador();
 
@@ -104,7 +106,7 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Salon'
  */
-router.get('/', salonesControlador.buscarSalones);
+router.get('/', listarSalonesValidations, validarInputs, salonesControlador.buscarSalones);
 
 /**
  * @swagger
@@ -129,7 +131,7 @@ router.get('/', salonesControlador.buscarSalones);
  *       404:
  *         description: Salón no encontrado.
  */
-router.get('/:salon_id', salonesControlador.buscarSalonPorId);
+router.get('/:salon_id', idParamSalon, validarInputs, salonesControlador.buscarSalonPorId);
 
 /**
  * @swagger
@@ -158,20 +160,7 @@ router.get('/:salon_id', salonesControlador.buscarSalonPorId);
  *       400:
  *         description: Datos de entrada inválidos.
  */
-router.post(
-  '/',
-  [
-    body('titulo').notEmpty().withMessage('El título es obligatorio'),
-    body('direccion').notEmpty().withMessage('La dirección es obligatoria'),
-    body('capacidad')
-      .isInt({ min: 1 })
-      .withMessage('La capacidad debe ser un número entero mayor que 0'),
-    body('importe')
-      .isFloat({ min: 0 })
-      .withMessage('El importe debe ser un número mayor o igual que 0'),
-  ],
-  salonesControlador.crearSalon
-);
+router.post('/', crearSalonValidations, validarInputs, salonesControlador.crearSalon);
 
 /**
  * @swagger
@@ -200,20 +189,8 @@ router.post(
  *       404:
  *         description: Salón no encontrado.
  */
-router.put(
-  '/:salon_id',
-  [
-    body('titulo').notEmpty().withMessage('El título es obligatorio'),
-    body('direccion').notEmpty().withMessage('La dirección es obligatoria'),
-    body('capacidad')
-      .isInt({ min: 1 })
-      .withMessage('La capacidad debe ser un número entero mayor que 0'),
-    body('importe')
-      .isFloat({ min: 0 })
-      .withMessage('El importe debe ser un número mayor o igual que 0'),
-  ],
-  salonesControlador.actualizarSalon
-);
+
+router.put('/:salon_id', actualizarSalonValidations, validarInputs, salonesControlador.actualizarSalon);
 
 /**
  * @swagger
@@ -234,6 +211,6 @@ router.put(
  *       404:
  *         description: Salón no encontrado.
  */
-router.delete('/:salon_id', salonesControlador.borrarSalon);
+router.delete('/:salon_id', idParamSalon, validarInputs, salonesControlador.borrarSalon);
 
 export { router };

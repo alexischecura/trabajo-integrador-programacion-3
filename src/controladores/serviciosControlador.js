@@ -45,10 +45,6 @@ export default class ServiciosControlador {
   };
 
   crearServicio = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
 
     try {
       const idNuevo = await this.servicios.crearServicio(req.body);
@@ -66,10 +62,6 @@ export default class ServiciosControlador {
   };
 
   actualizarServicio = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
 
     try {
       const servicio_id = req.params.servicio_id;

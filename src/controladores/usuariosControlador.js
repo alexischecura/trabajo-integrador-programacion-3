@@ -45,10 +45,6 @@ export default class UsuariosControlador {
   };
 
   crearUsuario = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
 
     try {
       const idNuevo = await this.usuarios.crearUsuario(req.body);
@@ -66,10 +62,6 @@ export default class UsuariosControlador {
   };
 
   actualizarUsuario = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
 
     try {
       const usuario_id = req.params.usuario_id;
