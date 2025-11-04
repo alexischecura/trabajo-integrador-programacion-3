@@ -18,25 +18,25 @@ INSERT INTO `salones` (`titulo`, `direccion`, `capacidad`, `importe`) VALUES
 
 -- Clientes
 
-INSERT INTO `usuarios` (`nombre`, `apellido`, `nombre_usuario`, `contrasenia`, `tipo_usuario`) VALUES
-('Arthur', 'Conan Doyle', 'acdoyle', 'password123', 'cliente'),
-('Agatha', 'Christie', 'achristie', 'password123', 'cliente'),
-('Paulo', 'Coelho', 'pcoelho', 'password123', 'cliente'),
-('Julio', 'Cortázar', 'jcortazar', 'password123', 'cliente'),
-('Eduardo', 'Lazzari', 'elazzari', 'password123', 'cliente');
+INSERT INTO `usuarios` (`nombre`, `apellido`, `nombre_usuario`, `email`, `contrasenia`, `tipo_usuario`) VALUES
+('Arthur', 'Conan Doyle', 'acdoyle', 'acdoyle@example.com', 'password123', 'cliente'),
+('Agatha', 'Christie', 'achristie', 'achristie@example.com', 'password123', 'cliente'),
+('Juanchi', 'Sommaruga', 'JuanchiCode', 'juanchisommaruga@gmail.com', 'password123', 'cliente'),
+('Julio', 'Cortázar', 'jcortazar', 'jcortazar@example.com', 'password123', 'cliente'),
+('Eduardo', 'Lazzari', 'elazzari', 'elazzari@example.com', 'password123', 'cliente');
 
 -- Empleados y Administradores
-INSERT INTO `usuarios` (`nombre`, `apellido`, `nombre_usuario`, `contrasenia`, `tipo_usuario`) VALUES
-('Darth', 'Vader', 'dvader', 'password123', 'administrador'),
-('Obi-Wan', 'Kenobi', 'okenobi', 'password123', 'empleado'),
-('Leia', 'Organa', 'lorgana', 'password123', 'empleado');
+INSERT INTO `usuarios` (`nombre`, `apellido`, `nombre_usuario`, `email`, `contrasenia`, `tipo_usuario`) VALUES
+('Darth', 'Vader', 'dvader', 'dvader@example.com', 'password123', 'administrador'),
+('Obi-Wan', 'Kenobi', 'okenobi', 'okenobi@example.com', 'password123', 'empleado'),
+('Leia', 'Organa', 'lorgana', 'lorgana@example.com', 'password123', 'empleado');
 
-INSERT INTO `reservas` (`reserva_id`, `fecha_reserva`, `salon_id`, `usuario_id`, `turno_id`, `importe_salon`, `importe_total`) VALUES
-(1, '2025-10-20', 1, 1, 1, 15000.00, 15000.00), 
-(2, '2025-10-28', 2, 2, 2, 12000.50, 12000.50), 
-(3, '2025-11-10', 3, 3, 3, 18000.00, 18000.00), 
-(4, '2025-11-25', 4, 4, 1, 25000.75, 25000.75),
-(5, '2025-12-05', 5, 5, 2, 16500.00, 16500.00);
+INSERT INTO `reservas` (`reserva_id`, `fecha_reserva`, `salon_id`, `usuario_id`, `turno_id`, `importe_salon`, `importe_total`, `recordatorio_enviado`, `activo`) VALUES
+(1, '2025-10-20', 1, 1, 1, 15000.00, 15000.00, 0, 1), 
+(2, '2025-10-28', 2, 2, 2, 12000.50, 12000.50, 0, 1), 
+(3, '2025-11-10', 3, 3, 3, 18000.00, 18000.00, 0, 1), 
+(4, '2025-11-25', 4, 4, 1, 25000.75, 25000.75, 0, 1),
+(5, '2025-12-05', 5, 5, 2, 16500.00, 16500.00, 0, 1);
 
 
 INSERT INTO `servicios` (`servicio_id`, `descripcion`, `importe`) VALUES

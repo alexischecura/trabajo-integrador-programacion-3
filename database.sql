@@ -1,4 +1,3 @@
-
 CREATE DATABASE IF NOT EXISTS `prog3_integrador` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Usar la base de datos
@@ -48,6 +47,7 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(100) NOT NULL,
   `nombre_usuario` varchar(50) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `contrasenia` varchar(255) NOT NULL,
   `tipo_usuario` enum('cliente','empleado','administrador') NOT NULL,
   `celular` varchar(50) DEFAULT NULL,
@@ -56,7 +56,8 @@ CREATE TABLE `usuarios` (
   `modificado` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `activo` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`usuario_id`),
-  UNIQUE KEY `nombre_usuario` (`nombre_usuario`)
+  UNIQUE KEY `nombre_usuario` (`nombre_usuario`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -70,6 +71,7 @@ CREATE TABLE `reservas` (
   `tematica` varchar(255) DEFAULT NULL,
   `importe_salon` decimal(10,2) NOT NULL,
   `importe_total` decimal(10,2) NOT NULL,
+  `recordatorio_enviado` tinyint(1) NOT NULL DEFAULT 0,
   `creado` timestamp NOT NULL DEFAULT current_timestamp(),
   `modificado` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `activo` tinyint(1) NOT NULL DEFAULT 1,
