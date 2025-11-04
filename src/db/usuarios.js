@@ -16,7 +16,7 @@ export default class Usuarios {
 
   buscarUsuarioPorNombre = async (nombre_usuario) => {
     const querySQL = `
-      SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto 
+      SELECT usuario_id, nombre, apellido, nombre_usuario, contrasenia, tipo_usuario, celular, foto 
       FROM usuarios 
       WHERE activo=1 AND nombre_usuario = ?`;
     const [resultado] = await conexion.execute(querySQL, [nombre_usuario]);
@@ -26,8 +26,19 @@ export default class Usuarios {
   crearUsuario = async ({ nombre, apellido, nombre_usuario, contrasenia, tipo_usuario, celular, foto }) => {
     const querySQL = `
       INSERT INTO usuarios (nombre, apellido, nombre_usuario, contrasenia, tipo_usuario, celular, foto) 
-      VALUES (?,?,?,?,?,?,?)`;
-    const valores = [nombre, apellido, nombre_usuario, contrasenia, tipo_usuario, celular, foto];
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const valores = [
+      nombre ?? null,
+      apellido ?? null,
+      nombre_usuario ?? null,
+      contrasenia ?? null,
+      tipo_usuario ?? null,
+      celular ?? null,
+      foto ?? null
+    ];
+
     const [resultado] = await conexion.execute(querySQL, valores);
     return resultado;
   };

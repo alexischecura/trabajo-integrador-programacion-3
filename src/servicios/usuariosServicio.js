@@ -1,4 +1,5 @@
 import Usuarios from '../db/usuarios.js';
+import bcrypt from 'bcrypt';
 
 export default class UsuariosServicio {
   constructor() {
@@ -28,7 +29,12 @@ export default class UsuariosServicio {
       err.status = 400;
       throw err;
     }
-    const resultado = await this.usuarios.crearUsuario(datos);
+
+    const hash = await bcrypt.hash(datos.contrasenia, 10);
+
+    const datosConHash = { ...datos, contrasenia: hash };
+
+    const resultado = await this.usuarios.crearUsuario(datosConHash);
     return resultado.insertId;
   };
 
