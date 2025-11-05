@@ -2,31 +2,202 @@ import { conexion } from './conexion.js';
 import { Parser } from 'json2csv';
 
 export default class Reservas {
+  buscarReservas = async (options = {}) => {
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'reserva_id',
+      order = 'ASC',
+      importeTotalMax,
+    } = options;
 
-  crearReserva = async (datos) => {
-    const { fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total } = datos;
-    const [resultado] = await conexion.query(
-      'INSERT INTO reservas (fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total]
+    const offset = (page - 1) * limit;
+
+    let querySQL =
+      'SELECT reserva_id, fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total FROM reservas WHERE activo=1';
+    const values = [];
+
+    if (importeTotalMax) {
+      querySQL += ' AND importe_total <= ?';
+      values.push(importeTotalMax);
+    }
+
+    // Whitelist for sortBy columns to prevent SQL injection
+    const allowedSortBy = [
+      'reserva_id',
+      'tematica',
+      'importe_salon',
+      'importe_total',
+    ];
+    if (allowedSortBy.includes(sortBy)) {
+      querySQL += ` ORDER BY ${sortBy} ${
+        order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'
+      }`;
+    }
+
+    querySQL += ' LIMIT ? OFFSET ?';
+    values.push(
+      parseInt(limit, 10).toString(),
+      parseInt(offset, 10).toString()
     );
+
+    const [reservas] = await conexion.execute(querySQL, values);
+
+    return reservas;
+  };
+
+  buscarReservaPorId = async (reserva_id) => {
+    const querySQL = `
+      SELECT 
+        r.*, 
+        u.usuario_id AS u_usuario_id, u.nombre AS u_nombre, u.nombre_usuario AS u_email,
+        s.salon_id AS s_salon_id, s.titulo AS s_titulo, s.direccion AS s_direccion,
+        t.turno_id AS t_turno_id, t.hora_desde, t.hora_hasta,
+        sv.servicio_id AS sv_servicio_id, sv.descripcion AS sv_descripcion, rs.importe AS rs_importe
+      FROM reservas AS r
+      INNER JOIN usuarios AS u ON u.usuario_id = r.usuario_id
+      INNER JOIN salones AS s ON s.salon_id = r.salon_id
+      INNER JOIN turnos AS t ON t.turno_id = r.turno_id
+      LEFT JOIN reservas_servicios AS rs ON rs.reserva_id = r.reserva_id
+      LEFT JOIN servicios AS sv ON sv.servicio_id = rs.servicio_id
+      WHERE r.activo = 1 AND r.reserva_id = ?;
+    `;
+
+    const [resultado] = await conexion.execute(querySQL, [reserva_id]);
+
     return resultado;
   };
 
+  consultarDisponibilidad = async (fecha_reserva, salon_id, turno_id, reserva_id = null) => {
+    let querySQL = `
+      SELECT COUNT(*) AS cantidad
+      FROM reservas
+      WHERE fecha_reserva = ? AND salon_id = ? AND turno_id = ? AND activo = 1
+    `;
+    const values = [fecha_reserva, salon_id, turno_id];
+
+    if (reserva_id) {
+      querySQL += ' AND reserva_id != ?';
+      values.push(reserva_id);
+    } 
+
+    const [resultado] = await conexion.execute(querySQL, values);
+
+    return resultado[0].cantidad === 0;
+  }
+
+  crearReserva = async (reserva) => {
+    const {
+      fecha_reserva,
+      salon_id,
+      usuario_id,
+      turno_id,
+      foto_cumpleaniero,
+      tematica,
+      importe_salon,
+      importe_total,
+    } = reserva;
+
+    const querySQL = `
+      INSERT INTO reservas (fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const [resultado] = await conexion.query(querySQL, [
+      fecha_reserva,
+      salon_id,
+      usuario_id,
+      turno_id,
+      foto_cumpleaniero,
+      tematica,
+      importe_salon,
+      importe_total,
+    ]);
+
+    return resultado;
+  };
+
+  crearReservaYRelacionarlaConServicios = async (reserva) => {
+    const {
+      fecha_reserva,
+      salon_id,
+      usuario_id,
+      turno_id,
+      foto_cumpleaniero,
+      tematica,
+      importe_salon,
+      importe_total,
+    } = reserva;
+
+    const querySQL = `
+      INSERT INTO reservas (fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const [resultado] = await conexion.query(querySQL, [
+      fecha_reserva,
+      salon_id,
+      usuario_id,
+      turno_id,
+      foto_cumpleaniero,
+      tematica,
+      importe_salon,
+      importe_total,
+    ]);
+
+    const querySQLReservaServicios =
+      'INSERT INTO reservas_servicios (reserva_id, servicio_id, importe) VALUES (?, ?, ?)';
+
+    for (const servicio of reserva.servicios) {
+      await conexion.query(querySQLReservaServicios, [
+        resultado.insertId,
+        servicio.servicio_id,
+        servicio.importe,
+      ]);
+    }
+
+    return resultado;
+  };
+
+  async actualizarReserva(reserva_id, datosFiltrados) {
+    const campos = Object.keys(datosFiltrados);
+    const valores = Object.values(datosFiltrados);
+
+    const setCampos = campos.map((campo) => `${campo} = ?`).join(', ');
+
+    const querySQL = `
+    UPDATE reservas
+    SET ${setCampos}
+    WHERE reserva_id = ? AND activo = 1
+  `;
+
+    const [resultado] = await conexion.execute(querySQL, [
+      ...valores,
+      reserva_id,
+    ]);
+
+    return resultado;
+  }
+
+  eliminarReserva = async (reserva_id) => {
+    const querySQL = `
+      UPDATE reservas 
+      SET activo = 0 
+      WHERE reserva_id = ?`;
+
+    const [resultado] = await conexion.execute(querySQL, [reserva_id]);
+
+    return resultado;
+  };
 
   /**
    * Obtiene todas las reservas y las convierte a formato CSV.
    * @returns {Promise<string>} Una cadena de texto en formato CSV.
    */
   exportarCSV = async () => {
-
     const [reservas] = await conexion.query('SELECT * FROM reservas');
 
-
     if (reservas.length === 0) {
-
       throw new Error('No hay reservas para exportar.');
     }
-
 
     const fields = [
       'id',
@@ -39,11 +210,9 @@ export default class Reservas {
       'creada_en',
     ];
 
-
     const json2csvParser = new Parser({ fields });
     const csv = json2csvParser.parse(reservas);
 
     return csv;
   };
-
 }
