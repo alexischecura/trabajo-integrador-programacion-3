@@ -17,11 +17,15 @@
     "express-validator": "^7.3.0",
     "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",
+    "json2csv": "^6.0.0-alpha.2",
     "memory-cache": "^0.2.0",
     "mysql2": "^3.15.1",
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.6",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }

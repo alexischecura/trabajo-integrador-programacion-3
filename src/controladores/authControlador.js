@@ -1,4 +1,3 @@
-import AuthServicio from '../servicios/authServicio.js';
 import { validationResult } from 'express-validator';
 
 const authServicio = new AuthServicio();

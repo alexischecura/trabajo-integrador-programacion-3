@@ -2,9 +2,11 @@ import express from 'express';
 import { crearReservaValidations } from '../../validations/reservasValidations.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 import ReservasControlador from '../../controladores/reservasControlador.js';
+import Reservas from '../../db/reservas.js';
 
 
 const reservasControlador = new ReservasControlador();
+const reservasDb = new Reservas();
 
 const router = express.Router();
 
@@ -104,5 +106,19 @@ const router = express.Router();
  *         description: Datos de entrada inválidos.
  */
 router.post('/', crearReservaValidations, validarInputs, reservasControlador.crearReserva);
+
+
+router.get('/exportar/csv', async (req, res, next) => {
+  try {
+    const csv = await reservasDb.exportarCSV();
+    res.header('Content-Type', 'text/csv');
+    res.attachment('reporte-reservas.csv');
+    res.send(csv);
+  } catch (error) {
+
+    next(error);
+  }
+});
+
 
 export { router };
