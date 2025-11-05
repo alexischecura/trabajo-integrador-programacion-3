@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { allowRoles } from '../../middlewares/roleMiddleware.js';
-import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 import {
   crearReservaValidations,
@@ -154,7 +153,6 @@ const router = express.Router();
 router.get(
   '/',
   listarReservasValidations,
-  authMiddleware,
   validarInputs,
   reservasControlador.buscarReservas
 );
@@ -184,7 +182,6 @@ router.get(
  */
 router.get(
   '/:reserva_id',
-  authMiddleware,
   idParamReserva,
   validarInputs,
   reservasControlador.buscarReservaPorId
@@ -210,7 +207,6 @@ router.get(
  */
 router.post(
   '/',
-  authMiddleware,
   allowRoles('administrador', 'cliente'),
   crearReservaValidations,
   validarInputs,
@@ -247,7 +243,6 @@ router.post(
 
 router.put(
   '/:reserva_id',
-  authMiddleware,
   allowRoles('administrador'),
   actualizarReservaValidations,
   validarInputs,
@@ -276,7 +271,6 @@ router.put(
 
 router.delete(
   '/:reserva_id',
-  authMiddleware,
   allowRoles('administrador'),
   idParamReserva,
   validarInputs,

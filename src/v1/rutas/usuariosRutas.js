@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { allowRoles } from '../../middlewares/roleMiddleware.js';
-import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 import {
   crearUsuarioValidations,
@@ -13,7 +12,7 @@ import UsuariosControlador from '../../controladores/usuariosControlador.js';
 const usuariosControlador = new UsuariosControlador();
 const router = express.Router();
 
-router.use(authMiddleware, allowRoles('administrador'));
+router.use(allowRoles('administrador'));
 
 /**
  * @swagger

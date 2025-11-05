@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { allowRoles } from '../../middlewares/roleMiddleware.js';
-import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 import {
   actualizarSalonValidations,
@@ -180,7 +179,6 @@ router.get(
 
 router.post(
   '/',
-  authMiddleware,
   allowRoles('administrador', 'empleado'),
   crearSalonValidations,
   validarInputs,
@@ -217,7 +215,6 @@ router.post(
 
 router.put(
   '/:salon_id',
-  authMiddleware,
   allowRoles('administrador', 'empleado'),
   actualizarSalonValidations,
   validarInputs,
@@ -246,7 +243,6 @@ router.put(
 
 router.delete(
   '/:salon_id',
-  authMiddleware,
   allowRoles('administrador', 'empleado'),
   idParamSalon,
   validarInputs,

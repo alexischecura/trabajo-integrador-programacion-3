@@ -1,7 +1,6 @@
 import { Router } from 'express';
 
 import { allowRoles } from '../../middlewares/roleMiddleware.js';
-import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import Reportes from '../../db/reportes.js';
 
 const router = Router();
@@ -11,7 +10,6 @@ const reportesDb = new Reportes();
 // [[TODO]] Mover reportesDb a la capa servicio
 router.get(
   '/salones-populares',
-  authMiddleware,
   allowRoles('administrador'),
   async (req, res, next) => {
     try {

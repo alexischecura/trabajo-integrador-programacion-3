@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { allowRoles } from '../../middlewares/roleMiddleware.js';
-import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 import {
   crearTurnoValidations,
@@ -114,7 +113,6 @@ router.get('/:turno_id', turnosControlador.buscarTurnoPorId);
  */
 router.post(
   '/',
-  authMiddleware,
   allowRoles('administrador', 'empleado'),
   crearTurnoValidations,
   validarInputs,
@@ -150,7 +148,6 @@ router.post(
  */
 router.put(
   '/:turno_id',
-  authMiddleware,
   allowRoles('administrador', 'empleado'),
   actualizarTurnoValidations,
   validarInputs,
@@ -178,7 +175,6 @@ router.put(
  */
 router.delete(
   '/:turno_id',
-  authMiddleware,
   allowRoles('administrador', 'empleado'),
   turnosControlador.borrarTurno
 );
