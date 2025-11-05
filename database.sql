@@ -97,3 +97,14 @@ CREATE TABLE `reservas_servicios` (
   CONSTRAINT `reservas_servicios_ibfk_1` FOREIGN KEY (`reserva_id`) REFERENCES `reservas` (`reserva_id`),
   CONSTRAINT `reservas_servicios_ibfk_2` FOREIGN KEY (`servicio_id`) REFERENCES `servicios` (`servicio_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE PROCEDURE sp_salones_mas_reservados()
+BEGIN
+    SELECT s.salon_id, s.titulo, COUNT(r.reserva_id) AS total_reservas
+    FROM salones s
+    LEFT JOIN reservas r ON s.salon_id = r.salon_id AND r.activo = 1
+    WHERE s.activo = 1
+    GROUP BY s.salon_id, s.titulo
+    ORDER BY total_reservas DESC;
+END;
