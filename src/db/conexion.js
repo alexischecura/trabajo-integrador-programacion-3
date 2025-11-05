@@ -11,6 +11,7 @@ export const conectarDB = async () => {
       user: process.env.DB_USERNAME,
       database: process.env.DATABASE,
       password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT || 3307
     });
     console.log('Base de datos conectada exitosamente.');
   } catch (error) {

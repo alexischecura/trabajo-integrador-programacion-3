@@ -23,13 +23,11 @@ export default class NotificacionEmailServicio {
     return handlebars.compile(datos);
   }
 
-  async confirmacionDeTurno({ fecha, salon, turno, correoDestino }) {
+  async enviar({ to, subject, template, context }) {
     try {
-      const nombrePlantilla = 'plantillaConfirmacionDeTurno.hbs';
-
-      const template = await this.crearTemplate(nombrePlantilla);
-
-      const html = template({ fecha, salon, turno });
+      const templatePath = `${template}.hbs`;
+      const compiledTemplate = await this.crearTemplate(templatePath);
+      const html = compiledTemplate(context);
 
       const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -37,25 +35,23 @@ export default class NotificacionEmailServicio {
           user: process.env.GOOGLE_EMAIL,
           pass: process.env.GOOGLE_APP_PASSWORD,
         },
+        tls: {
+          rejectUnauthorized: false
+        }
       });
 
-      const opciones = {
-        to: correoDestino,
-        subject: 'Notificación',
+      const mailOptions = {
+        to: to,
+        subject: subject,
         html,
       };
 
-      transporter.sendMail(opciones, (error, info) => {
-        if (error) {
-          console.log(error);
-          return null;
-        }
-        console.log(info);
-
-        return info;
-      });
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Correo enviado: %s', info.messageId);
+      return info;
     } catch (error) {
-      console.log(error);
+      console.error('Error al enviar el correo:', error);
+      throw error; // Re-lanzar el error para que el llamador pueda manejarlo
     }
   }
 }

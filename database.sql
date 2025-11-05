@@ -1,4 +1,3 @@
-
 CREATE DATABASE IF NOT EXISTS `prog3_integrador` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Usar la base de datos
@@ -70,6 +69,8 @@ CREATE TABLE `reservas` (
   `tematica` varchar(255) DEFAULT NULL,
   `importe_salon` decimal(10,2) NOT NULL,
   `importe_total` decimal(10,2) NOT NULL,
+  `recordatorio_enviado` tinyint(1) NOT NULL DEFAULT 0,
+  `confirmacion_enviada` tinyint(1) NOT NULL DEFAULT 0,
   `creado` timestamp NOT NULL DEFAULT current_timestamp(),
   `modificado` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `activo` tinyint(1) NOT NULL DEFAULT 1,
@@ -96,3 +97,14 @@ CREATE TABLE `reservas_servicios` (
   CONSTRAINT `reservas_servicios_ibfk_1` FOREIGN KEY (`reserva_id`) REFERENCES `reservas` (`reserva_id`),
   CONSTRAINT `reservas_servicios_ibfk_2` FOREIGN KEY (`servicio_id`) REFERENCES `servicios` (`servicio_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE PROCEDURE sp_salones_mas_reservados()
+BEGIN
+    SELECT s.salon_id, s.titulo, COUNT(r.reserva_id) AS total_reservas
+    FROM salones s
+    LEFT JOIN reservas r ON s.salon_id = r.salon_id AND r.activo = 1
+    WHERE s.activo = 1
+    GROUP BY s.salon_id, s.titulo
+    ORDER BY total_reservas DESC;
+END;

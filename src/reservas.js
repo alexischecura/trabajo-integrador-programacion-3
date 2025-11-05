@@ -1,13 +1,16 @@
 process.loadEnvFile();
 
+import authRutas from './v1/rutas/authRutas.js';
 import express from 'express';
-import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './v1/swagger.js';
 import { router as salonesRutasV1 } from './v1/rutas/salonesRutas.js';
-import { router as usuariosRutasV1 } from './v1/rutas/usuariosRutas.js';
 import { router as serviciosRutasV1 } from './v1/rutas/serviciosRutas.js';
+import { router as reservasRutasV1 } from './v1/rutas/reservasRutas.js';
+import { router as reportesRutasV1 } from './v1/rutas/reportesRutas.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import AppError from './utiles/AppError.js';
+import { swaggerSpec } from './v1/swagger.js';
+import swaggerUi from 'swagger-ui-express';
+import { router as usuariosRutasV1 } from './v1/rutas/usuariosRutas.js';
 
 const app = express();
 
@@ -17,7 +20,9 @@ app.use(express.json());
 app.use('/api/v1/salones', salonesRutasV1);
 app.use('/api/v1/usuarios', usuariosRutasV1);
 app.use('/api/v1/servicios', serviciosRutasV1);
-
+app.use('/api/v1/reservas', reservasRutasV1);
+app.use('/api/v1/auth', authRutas);
+app.use('/api/v1/reportes', reportesRutasV1);
 // Documentación de Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

@@ -21,6 +21,38 @@
       "items": [
         {
           "type": "http",
+          "name": "Crear Reserva",
+          "filename": "Crear Reserva.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/reservas",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"fecha_reserva\": \"2025-12-31\",\n  \"salon_id\": 1,\n  \"usuario_id\": 1,\n  \"turno_id\": 1,\n  \"foto_cumpleaniero\": null,\n  \"tematica\": \"Navidad\",\n  \"importe_salon\": 15000.00,\n  \"importe_total\": 15000.00\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
           "name": "Notificación",
           "filename": "Notificación.bru",
           "seq": 2,

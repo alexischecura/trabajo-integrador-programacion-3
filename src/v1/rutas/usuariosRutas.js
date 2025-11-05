@@ -1,10 +1,11 @@
 import express from 'express';
 import UsuariosControlador from '../../controladores/usuariosControlador.js';
 import { crearUsuarioValidations, actualizarUsuarioValidations, listarUsuariosValidations } from '../../validations/usuariosValidations.js';
+import { allowRoles } from '../../middlewares/roleMiddleware.js';
+import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 
 const usuariosControlador = new UsuariosControlador();
-
 const router = express.Router();
 
 /**
@@ -224,5 +225,11 @@ router.put('/:usuario_id', actualizarUsuarioValidations, validarInputs, usuarios
  *         description: Usuario no encontrado.
  */
 router.delete('/:usuario_id', usuariosControlador.borrarUsuario);
+router.post('/', crearUsuarioValidations, validarInputs, usuariosControlador.crearUsuario);
+
+router.get('/', authMiddleware, allowRoles('administrador'), usuariosControlador.buscarUsuarios);
+router.get('/:usuario_id', authMiddleware, allowRoles('administrador'), usuariosControlador.buscarUsuarioPorId);
+router.put('/:usuario_id', authMiddleware, allowRoles('administrador'), actualizarUsuarioValidations, validarInputs, usuariosControlador.actualizarUsuario);
+router.delete('/:usuario_id', authMiddleware, allowRoles('administrador'), usuariosControlador.borrarUsuario);
 
 export { router };

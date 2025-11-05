@@ -6,6 +6,7 @@ const TIPOS_DE_USUARIO = {
   empleado: 2,
   cliente: 3,
 };
+import bcrypt from 'bcrypt';
 
 export default class UsuariosServicio {
   constructor() {
@@ -42,7 +43,11 @@ export default class UsuariosServicio {
     datos.tipo_usuario =
       TIPOS_DE_USUARIO[datos.tipo_usuario] || TIPOS_DE_USUARIO.cliente;
 
-    const resultado = await this.usuarios.crearUsuario(datos);
+    const hash = await bcrypt.hash(datos.contrasenia, 10);
+
+    const datosConHash = { ...datos, contrasenia: hash };
+
+    const resultado = await this.usuarios.crearUsuario(datosConHash);
     return resultado.insertId;
   };
 

@@ -13,6 +13,24 @@ const swaggerOptions = {
         url: '/api/v1',
       },
     ],
+    tags: [
+      {
+        name: 'Reservas',
+        description: 'Operaciones relacionadas con las reservas',
+      },
+      {
+        name: 'Salones',
+        description: 'Operaciones relacionadas con los salones',
+      },
+      {
+        name: 'Usuarios',
+        description: 'Operaciones relacionadas con los usuarios',
+      },
+      {
+        name: 'Servicios',
+        description: 'Operaciones relacionadas con los servicios',
+      },
+    ],
   },
   apis: ['./src/v1/rutas/*.js'], // Archivos que contienen la documentación
 };
