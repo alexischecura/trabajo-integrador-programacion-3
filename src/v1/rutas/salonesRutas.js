@@ -1,6 +1,10 @@
 import express from 'express';
+import { actualizarSalonValidations, crearSalonValidations, idParamSalon, listarSalonesValidations } from '../../validations/salonesValidations.js';
+
 import SalonesControlador from '../../controladores/salonesControlador.js';
-import { crearSalonValidations, actualizarSalonValidations, idParamSalon, listarSalonesValidations } from '../../validations/salonesValidations.js';
+import { allowRoles } from '../../middlewares/roleMiddleware.js';
+import { authMiddleware } from '../../middlewares/authMiddleware.js';
+import { body } from 'express-validator';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 
 const salonesControlador = new SalonesControlador();
@@ -159,7 +163,15 @@ router.get('/:salon_id', idParamSalon, validarInputs, salonesControlador.buscarS
  *       400:
  *         description: Datos de entrada inválidos.
  */
-router.post('/', crearSalonValidations, validarInputs, salonesControlador.crearSalon);
+
+router.post(
+  '/',
+  authMiddleware,
+  allowRoles('administrador', 'empleado'),
+  crearSalonValidations,
+  validarInputs,
+  salonesControlador.crearSalon
+);
 
 /**
  * @swagger
@@ -189,7 +201,14 @@ router.post('/', crearSalonValidations, validarInputs, salonesControlador.crearS
  *         description: Salón no encontrado.
  */
 
-router.put('/:salon_id', actualizarSalonValidations, validarInputs, salonesControlador.actualizarSalon);
+router.put(
+  '/:salon_id',
+  authMiddleware,
+  allowRoles('administrador', 'empleado'),
+  actualizarSalonValidations,
+  validarInputs,
+  salonesControlador.actualizarSalon
+);
 
 /**
  * @swagger
@@ -210,6 +229,14 @@ router.put('/:salon_id', actualizarSalonValidations, validarInputs, salonesContr
  *       404:
  *         description: Salón no encontrado.
  */
-router.delete('/:salon_id', idParamSalon, validarInputs, salonesControlador.borrarSalon);
+
+router.delete(
+  '/:salon_id',
+  authMiddleware,
+  allowRoles('administrador'),
+  idParamSalon,
+  validarInputs,
+  salonesControlador.borrarSalon
+);
 
 export { router };

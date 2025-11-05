@@ -16,20 +16,20 @@ INSERT INTO `salones` (`titulo`, `direccion`, `capacidad`, `importe`) VALUES
 ('Salón Encanto', 'Vereda Colombia 202, Casa Madrigal', 90, 16500.00);
 
 
--- Clientes
+-- Clientes (contraseñas hasheadas con bcrypt: "password123")
 
-INSERT INTO `usuarios` (`nombre`, `apellido`, `nombre_usuario`, `email`, `contrasenia`, `tipo_usuario`) VALUES
-('Arthur', 'Conan Doyle', 'acdoyle', 'acdoyle@example.com', 'password123', 'cliente'),
-('Agatha', 'Christie', 'achristie', 'achristie@example.com', 'password123', 'cliente'),
-('Juanchi', 'Sommaruga', 'JuanchiCode', 'juanchisommaruga@gmail.com', 'password123', 'cliente'),
-('Julio', 'Cortázar', 'jcortazar', 'jcortazar@example.com', 'password123', 'cliente'),
-('Eduardo', 'Lazzari', 'elazzari', 'elazzari@example.com', 'password123', 'cliente');
+INSERT INTO `usuarios` (`nombre`, `apellido`, `nombre_usuario`, `contrasenia`, `tipo_usuario`) VALUES
+('Arthur', 'Conan Doyle', 'acdoyle@example.com', '$2a$12$K08rDFOU6JTwRi.VCcoNUuhlyMoMfGqGTB671bdRIJq70RVnw2AsW', 'cliente'),
+('Agatha', 'Christie', 'achristie@example.com', '$2a$12$K08rDFOU6JTwRi.VCcoNUuhlyMoMfGqGTB671bdRIJq70RVnw2AsW', 'cliente'),
+('Juanchi', 'Sommaruga', 'juanchisommaruga@gmail.com', '$2a$12$K08rDFOU6JTwRi.VCcoNUuhlyMoMfGqGTB671bdRIJq70RVnw2AsW', 'cliente'),
+('Julio', 'Cortázar', 'jcortazar@example.com', '$2a$12$K08rDFOU6JTwRi.VCcoNUuhlyMoMfGqGTB671bdRIJq70RVnw2AsW', 'cliente'),
+('Eduardo', 'Lazzari', 'elazzari@example.com', '$2a$12$K08rDFOU6JTwRi.VCcoNUuhlyMoMfGqGTB671bdRIJq70RVnw2AsW', 'cliente');
 
 -- Empleados y Administradores
-INSERT INTO `usuarios` (`nombre`, `apellido`, `nombre_usuario`, `email`, `contrasenia`, `tipo_usuario`) VALUES
-('Darth', 'Vader', 'dvader', 'dvader@example.com', 'password123', 'administrador'),
-('Obi-Wan', 'Kenobi', 'okenobi', 'okenobi@example.com', 'password123', 'empleado'),
-('Leia', 'Organa', 'lorgana', 'lorgana@example.com', 'password123', 'empleado');
+INSERT INTO `usuarios` (`nombre`, `apellido`, `nombre_usuario`, `contrasenia`, `tipo_usuario`) VALUES
+('Darth', 'Vader', 'dvader@example.com', '$2a$12$K08rDFOU6JTwRi.VCcoNUuhlyMoMfGqGTB671bdRIJq70RVnw2AsW', 'administrador'),
+('Obi-Wan', 'Kenobi', 'okenobi@example.com', '$2a$12$K08rDFOU6JTwRi.VCcoNUuhlyMoMfGqGTB671bdRIJq70RVnw2AsW', 'empleado'),
+('Leia', 'Organa', 'lorgana@example.com', '$2a$12$K08rDFOU6JTwRi.VCcoNUuhlyMoMfGqGTB671bdRIJq70RVnw2AsW', 'empleado');
 
 INSERT INTO `reservas` (`reserva_id`, `fecha_reserva`, `salon_id`, `usuario_id`, `turno_id`, `importe_salon`, `importe_total`, `recordatorio_enviado`, `activo`) VALUES
 (1, '2025-10-20', 1, 1, 1, 15000.00, 15000.00, 0, 1), 

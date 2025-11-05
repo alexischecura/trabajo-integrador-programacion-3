@@ -9,7 +9,7 @@ const buscarReservasParaConfirmacion = async () => {
             r.reserva_id,
             r.fecha_reserva,
             t.hora_desde,
-            u.email,
+            u.nombre_usuario,
             u.nombre,
             s.titulo as nombre_salon
         FROM reservas r
@@ -38,10 +38,10 @@ export const procesarConfirmaciones = async () => {
 
     for (const reserva of reservas) {
         try {
-            console.log(`Enviando confirmación para la reserva ${reserva.reserva_id} al email ${reserva.email}`);
+            console.log(`Enviando confirmación para la reserva ${reserva.reserva_id} al email ${reserva.nombre_usuario}`);
             
             const emailOptions = {
-                to: reserva.email,
+                to: reserva.nombre_usuario,
                 subject: 'Confirmación de tu reserva',
                 template: 'plantillaConfirmacionDeTurno',
                 context: {

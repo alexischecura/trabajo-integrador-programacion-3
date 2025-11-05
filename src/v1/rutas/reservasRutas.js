@@ -1,5 +1,8 @@
+import express from 'express';
 import { crearReservaValidations } from '../../validations/reservasValidations.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
+import ReservasControlador from '../../controladores/reservasControlador.js';
+
 
 const reservasControlador = new ReservasControlador();
 
