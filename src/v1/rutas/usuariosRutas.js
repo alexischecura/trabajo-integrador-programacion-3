@@ -1,12 +1,19 @@
 import express from 'express';
-import UsuariosControlador from '../../controladores/usuariosControlador.js';
-import { crearUsuarioValidations, actualizarUsuarioValidations, listarUsuariosValidations } from '../../validations/usuariosValidations.js';
+
 import { allowRoles } from '../../middlewares/roleMiddleware.js';
 import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
+import {
+  crearUsuarioValidations,
+  actualizarUsuarioValidations,
+  listarUsuariosValidations,
+} from '../../validations/usuariosValidations.js';
+import UsuariosControlador from '../../controladores/usuariosControlador.js';
 
 const usuariosControlador = new UsuariosControlador();
 const router = express.Router();
+
+router.use(authMiddleware, allowRoles('administrador'));
 
 /**
  * @swagger
@@ -113,7 +120,12 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Usuario'
  */
-router.get('/', listarUsuariosValidations, validarInputs, usuariosControlador.buscarUsuarios);
+router.get(
+  '/',
+  listarUsuariosValidations,
+  validarInputs,
+  usuariosControlador.buscarUsuarios
+);
 
 /**
  * @swagger
@@ -174,7 +186,12 @@ router.get('/:usuario_id', usuariosControlador.buscarUsuarioPorId);
  *       400:
  *         description: Datos de entrada inválidos.
  */
-router.post('/', crearUsuarioValidations, validarInputs, usuariosControlador.crearUsuario);
+router.post(
+  '/',
+  crearUsuarioValidations,
+  validarInputs,
+  usuariosControlador.crearUsuario
+);
 
 /**
  * @swagger
@@ -203,7 +220,12 @@ router.post('/', crearUsuarioValidations, validarInputs, usuariosControlador.cre
  *       404:
  *         description: Usuario no encontrado.
  */
-router.put('/:usuario_id', actualizarUsuarioValidations, validarInputs, usuariosControlador.actualizarUsuario);
+router.put(
+  '/:usuario_id',
+  actualizarUsuarioValidations,
+  validarInputs,
+  usuariosControlador.actualizarUsuario
+);
 
 /**
  * @swagger
@@ -225,11 +247,5 @@ router.put('/:usuario_id', actualizarUsuarioValidations, validarInputs, usuarios
  *         description: Usuario no encontrado.
  */
 router.delete('/:usuario_id', usuariosControlador.borrarUsuario);
-router.post('/', crearUsuarioValidations, validarInputs, usuariosControlador.crearUsuario);
-
-router.get('/', authMiddleware, allowRoles('administrador'), usuariosControlador.buscarUsuarios);
-router.get('/:usuario_id', authMiddleware, allowRoles('administrador'), usuariosControlador.buscarUsuarioPorId);
-router.put('/:usuario_id', authMiddleware, allowRoles('administrador'), actualizarUsuarioValidations, validarInputs, usuariosControlador.actualizarUsuario);
-router.delete('/:usuario_id', authMiddleware, allowRoles('administrador'), usuariosControlador.borrarUsuario);
 
 export { router };

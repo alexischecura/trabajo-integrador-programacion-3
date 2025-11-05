@@ -1,4 +1,7 @@
 import express from 'express';
+
+import { allowRoles } from '../../middlewares/roleMiddleware.js';
+import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
 import {
   crearReservaValidations,
@@ -7,7 +10,8 @@ import {
   actualizarReservaValidations,
 } from '../../validations/reservasValidations.js';
 import ReservasControlador from '../../controladores/reservasControlador.js';
-import Reservas from '../../db/reservas.js';
+import Reservas from '../../db/reservas.js'; 
+
 
 const reservasControlador = new ReservasControlador();
 const reservasDb = new Reservas();
@@ -150,6 +154,7 @@ const router = express.Router();
 router.get(
   '/',
   listarReservasValidations,
+  authMiddleware,
   validarInputs,
   reservasControlador.buscarReservas
 );
@@ -179,6 +184,7 @@ router.get(
  */
 router.get(
   '/:reserva_id',
+  authMiddleware,
   idParamReserva,
   validarInputs,
   reservasControlador.buscarReservaPorId
@@ -204,8 +210,8 @@ router.get(
  */
 router.post(
   '/',
-  // authMiddleware,
-  // allowRoles('administrador', 'empleado'),
+  authMiddleware,
+  allowRoles('administrador', 'cliente'),
   crearReservaValidations,
   validarInputs,
   reservasControlador.crearReserva
@@ -241,8 +247,8 @@ router.post(
 
 router.put(
   '/:reserva_id',
-  // authMiddleware,
-  // allowRoles('administrador', 'empleado'),
+  authMiddleware,
+  allowRoles('administrador'),
   actualizarReservaValidations,
   validarInputs,
   reservasControlador.actualizarReserva
@@ -270,16 +276,18 @@ router.put(
 
 router.delete(
   '/:reserva_id',
-  // authMiddleware,
-  // allowRoles('administrador'),
+  authMiddleware,
+  allowRoles('administrador'),
   idParamReserva,
   validarInputs,
   reservasControlador.eliminarReserva
 );
 
+// [[TODO]] Mover reservasDb a la capa servicio
+
 router.get('/exportar/csv', async (req, res, next) => {
   try {
-    const csv = await reservasDb.exportarCSV();
+    const csv = await reservasDb.exportarCSV(); 
     res.header('Content-Type', 'text/csv');
     res.attachment('reporte-reservas.csv');
     res.send(csv);

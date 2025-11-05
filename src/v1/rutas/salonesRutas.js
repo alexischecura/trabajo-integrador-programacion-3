@@ -1,11 +1,15 @@
 import express from 'express';
-import { actualizarSalonValidations, crearSalonValidations, idParamSalon, listarSalonesValidations } from '../../validations/salonesValidations.js';
 
-import SalonesControlador from '../../controladores/salonesControlador.js';
 import { allowRoles } from '../../middlewares/roleMiddleware.js';
 import { authMiddleware } from '../../middlewares/authMiddleware.js';
-import { body } from 'express-validator';
 import { validarInputs } from '../../middlewares/validarInputs.js';
+import {
+  actualizarSalonValidations,
+  crearSalonValidations,
+  idParamSalon,
+  listarSalonesValidations,
+} from '../../validations/salonesValidations.js';
+import SalonesControlador from '../../controladores/salonesControlador.js';
 
 const salonesControlador = new SalonesControlador();
 
@@ -109,7 +113,12 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Salon'
  */
-router.get('/', listarSalonesValidations, validarInputs, salonesControlador.buscarSalones);
+router.get(
+  '/',
+  listarSalonesValidations,
+  validarInputs,
+  salonesControlador.buscarSalones
+);
 
 /**
  * @swagger
@@ -134,7 +143,12 @@ router.get('/', listarSalonesValidations, validarInputs, salonesControlador.busc
  *       404:
  *         description: Salón no encontrado.
  */
-router.get('/:salon_id', idParamSalon, validarInputs, salonesControlador.buscarSalonPorId);
+router.get(
+  '/:salon_id',
+  idParamSalon,
+  validarInputs,
+  salonesControlador.buscarSalonPorId
+);
 
 /**
  * @swagger
@@ -233,7 +247,7 @@ router.put(
 router.delete(
   '/:salon_id',
   authMiddleware,
-  allowRoles('administrador'),
+  allowRoles('administrador', 'empleado'),
   idParamSalon,
   validarInputs,
   salonesControlador.borrarSalon

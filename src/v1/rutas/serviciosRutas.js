@@ -1,10 +1,14 @@
-
 import express from 'express';
-import ServiciosControlador from '../../controladores/serviciosControlador.js';
-import { crearServicioValidations, actualizarServicioValidations, listarServiciosValidations } from '../../validations/serviciosValidations.js';
+
 import { allowRoles } from '../../middlewares/roleMiddleware.js';
 import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
+import {
+  crearServicioValidations,
+  actualizarServicioValidations,
+  listarServiciosValidations,
+} from '../../validations/serviciosValidations.js';
+import ServiciosControlador from '../../controladores/serviciosControlador.js';
 
 const serviciosControlador = new ServiciosControlador();
 const router = express.Router();
@@ -94,7 +98,12 @@ const router = express.Router();
  *                   items:
  *                     $ref: '#/components/schemas/Servicio'
  */
-router.get('/', listarServiciosValidations, validarInputs, serviciosControlador.buscarServicios);
+router.get(
+  '/',
+  listarServiciosValidations,
+  validarInputs,
+  serviciosControlador.buscarServicios
+);
 
 /**
  * @swagger
@@ -121,7 +130,6 @@ router.get('/', listarServiciosValidations, validarInputs, serviciosControlador.
  */
 router.get('/:servicio_id', serviciosControlador.buscarServicioPorId);
 
-
 /**
  * @swagger
  * /servicios:
@@ -145,7 +153,14 @@ router.get('/:servicio_id', serviciosControlador.buscarServicioPorId);
  *       400:
  *         description: Datos de entrada inválidos.
  */
-router.post('/', crearServicioValidations, validarInputs, serviciosControlador.crearServicio);
+router.post(
+  '/',
+  authMiddleware,
+  allowRoles('administrador', 'empleado'),
+  crearServicioValidations,
+  validarInputs,
+  serviciosControlador.crearServicio
+);
 
 /**
  * @swagger
@@ -174,7 +189,14 @@ router.post('/', crearServicioValidations, validarInputs, serviciosControlador.c
  *       404:
  *         description: Servicio no encontrado.
  */
-router.put('/:servicio_id', actualizarServicioValidations, validarInputs, serviciosControlador.actualizarServicio);
+router.put(
+  '/:servicio_id',
+  authMiddleware,
+  allowRoles('administrador', 'empleado'),
+  actualizarServicioValidations,
+  validarInputs,
+  serviciosControlador.actualizarServicio
+);
 
 /**
  * @swagger
@@ -195,9 +217,11 @@ router.put('/:servicio_id', actualizarServicioValidations, validarInputs, servic
  *       404:
  *         description: Servicio no encontrado.
  */
-router.delete('/:servicio_id', serviciosControlador.borrarServicio);
-router.post('/', authMiddleware, allowRoles('administrador', 'empleado'), crearServicioValidations, validarInputs, serviciosControlador.crearServicio);
-router.put('/:servicio_id', authMiddleware, allowRoles('administrador', 'empleado'), actualizarServicioValidations, validarInputs, serviciosControlador.actualizarServicio);
-router.delete('/:servicio_id', authMiddleware, allowRoles('administrador'), serviciosControlador.borrarServicio);
+router.delete(
+  '/:servicio_id',
+  authMiddleware,
+  allowRoles('administrador', 'empleado'),
+  serviciosControlador.borrarServicio
+);
 
 export { router };

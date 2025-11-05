@@ -1,7 +1,13 @@
 import express from 'express';
-import TurnosControlador from '../../controladores/turnosControlador.js';
-import { crearTurnoValidations, actualizarTurnoValidations } from '../../validations/turnosValidations.js';
+
+import { allowRoles } from '../../middlewares/roleMiddleware.js';
+import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
+import {
+  crearTurnoValidations,
+  actualizarTurnoValidations,
+} from '../../validations/turnosValidations.js';
+import TurnosControlador from '../../controladores/turnosControlador.js';
 
 const turnosControlador = new TurnosControlador();
 const router = express.Router();
@@ -83,7 +89,6 @@ router.get('/', turnosControlador.buscarTurnos);
  */
 router.get('/:turno_id', turnosControlador.buscarTurnoPorId);
 
-
 /**
  * @swagger
  * /turnos:
@@ -107,7 +112,14 @@ router.get('/:turno_id', turnosControlador.buscarTurnoPorId);
  *       400:
  *         description: Datos de entrada inválidos.
  */
-router.post('/', crearTurnoValidations, validarInputs, turnosControlador.crearTurno);
+router.post(
+  '/',
+  authMiddleware,
+  allowRoles('administrador', 'empleado'),
+  crearTurnoValidations,
+  validarInputs,
+  turnosControlador.crearTurno
+);
 
 /**
  * @swagger
@@ -136,7 +148,14 @@ router.post('/', crearTurnoValidations, validarInputs, turnosControlador.crearTu
  *       404:
  *         description: Turno no encontrado.
  */
-router.put('/:turno_id', actualizarTurnoValidations, validarInputs, turnosControlador.actualizarTurno);
+router.put(
+  '/:turno_id',
+  authMiddleware,
+  allowRoles('administrador', 'empleado'),
+  actualizarTurnoValidations,
+  validarInputs,
+  turnosControlador.actualizarTurno
+);
 
 /**
  * @swagger
@@ -157,6 +176,11 @@ router.put('/:turno_id', actualizarTurnoValidations, validarInputs, turnosContro
  *       404:
  *         description: Turno no encontrado.
  */
-router.delete('/:turno_id', turnosControlador.borrarTurno);
+router.delete(
+  '/:turno_id',
+  authMiddleware,
+  allowRoles('administrador', 'empleado'),
+  turnosControlador.borrarTurno
+);
 
 export { router };

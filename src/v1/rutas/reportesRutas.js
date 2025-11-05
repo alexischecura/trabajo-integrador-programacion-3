@@ -1,21 +1,27 @@
 import { Router } from 'express';
 
+import { allowRoles } from '../../middlewares/roleMiddleware.js';
+import { authMiddleware } from '../../middlewares/authMiddleware.js';
 import Reportes from '../../db/reportes.js';
 
 const router = Router();
 
 const reportesDb = new Reportes();
 
-router.get('/salones-populares', async (req, res, next) => {
-  try {
+// [[TODO]] Mover reportesDb a la capa servicio
+router.get(
+  '/salones-populares',
+  authMiddleware,
+  allowRoles('administrador'),
+  async (req, res, next) => {
+    try {
+      const reporte = await reportesDb.salonesPopulares();
 
-    const reporte = await reportesDb.salonesPopulares();
-
-
-    res.json(reporte);
-  } catch (error) {
-    next(error);
+      res.json(reporte);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 export { router };
