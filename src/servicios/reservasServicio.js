@@ -72,8 +72,7 @@ export default class ReservasServicio {
     const disponibilidad = await this.reservas.consultarDisponibilidad(
       fecha_reserva,
       salon_id,
-      turno_id,
-      null
+      turno_id
     );
 
     if (!disponibilidad) {
@@ -103,17 +102,34 @@ export default class ReservasServicio {
 
     const resultado = await this.reservas.crearReserva(datosReserva);
 
-    if (resultado.insertId) {
-      await this.reservas_servicios.crearReservaServicios(
-        resultado.insertId,
-        datos.servicios || []
-      );
-    }
+    await this.reservas_servicios.crearReservaServicios(
+      resultado.insertId,
+      datos.servicios || []
+    );
+
     return resultado.insertId;
   };
 
   actualizarReserva = async (reserva_id, datos) => {
     const reservaActual = await this.buscarReservaPorId(reserva_id);
+
+    const camposPermitidos = [
+      'fecha_reserva',
+      'salon_id',
+      'turno_id',
+      'foto_cumpleaniero',
+      'tematica',
+      'importe_salon',
+    ];
+
+    const datosFiltrados = Object.fromEntries(
+      Object.entries(datos).filter(([key]) => camposPermitidos.includes(key))
+    );
+
+    if (Object.keys(datosFiltrados).length === 0) {
+      throw new AppError('No hay campos válidos para actualizar', 400);
+    }
+
     const salon_id = datos.salon_id || reservaActual.salon_id;
     const fecha_reserva = datos.fecha_reserva || reservaActual.fecha_reserva;
     const turno_id = datos.turno_id || reservaActual.turno_id;
@@ -141,10 +157,13 @@ export default class ReservasServicio {
       datos.importe_total = importe_total;
     }
 
-    return this.reservas.actualizarReserva(reserva_id, datos);
+    return this.reservas.actualizarReserva(reserva_id, datosFiltrados);
   };
 
   eliminarReserva = async (reserva_id) => {
+    // La función buscarReservaPorId lanza una excepción/404 si la reserva no existe.
+    await this.buscarReservaPorId(reserva_id);
+
     return this.reservas.eliminarReserva(reserva_id);
   };
 }

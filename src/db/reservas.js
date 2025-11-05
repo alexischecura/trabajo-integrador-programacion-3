@@ -68,7 +68,12 @@ export default class Reservas {
     return resultado;
   };
 
-  consultarDisponibilidad = async (fecha_reserva, salon_id, turno_id, reserva_id = null) => {
+  consultarDisponibilidad = async (
+    fecha_reserva,
+    salon_id,
+    turno_id,
+    reserva_id = null
+  ) => {
     let querySQL = `
       SELECT COUNT(*) AS cantidad
       FROM reservas
@@ -76,15 +81,15 @@ export default class Reservas {
     `;
     const values = [fecha_reserva, salon_id, turno_id];
 
-    if (reserva_id) {
+    if (reserva_id !== null) {
       querySQL += ' AND reserva_id != ?';
       values.push(reserva_id);
-    } 
+    }
 
     const [resultado] = await conexion.execute(querySQL, values);
 
     return resultado[0].cantidad === 0;
-  }
+  };
 
   crearReserva = async (reserva) => {
     const {
@@ -116,46 +121,6 @@ export default class Reservas {
     return resultado;
   };
 
-  crearReservaYRelacionarlaConServicios = async (reserva) => {
-    const {
-      fecha_reserva,
-      salon_id,
-      usuario_id,
-      turno_id,
-      foto_cumpleaniero,
-      tematica,
-      importe_salon,
-      importe_total,
-    } = reserva;
-
-    const querySQL = `
-      INSERT INTO reservas (fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-
-    const [resultado] = await conexion.query(querySQL, [
-      fecha_reserva,
-      salon_id,
-      usuario_id,
-      turno_id,
-      foto_cumpleaniero,
-      tematica,
-      importe_salon,
-      importe_total,
-    ]);
-
-    const querySQLReservaServicios =
-      'INSERT INTO reservas_servicios (reserva_id, servicio_id, importe) VALUES (?, ?, ?)';
-
-    for (const servicio of reserva.servicios) {
-      await conexion.query(querySQLReservaServicios, [
-        resultado.insertId,
-        servicio.servicio_id,
-        servicio.importe,
-      ]);
-    }
-
-    return resultado;
-  };
 
   async actualizarReserva(reserva_id, datosFiltrados) {
     const campos = Object.keys(datosFiltrados);
