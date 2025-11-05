@@ -35,6 +35,9 @@ export default class NotificacionEmailServicio {
           user: process.env.GOOGLE_EMAIL,
           pass: process.env.GOOGLE_APP_PASSWORD,
         },
+        tls: {
+          rejectUnauthorized: false
+        }
       });
 
       const mailOptions = {

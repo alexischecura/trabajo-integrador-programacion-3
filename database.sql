@@ -72,6 +72,7 @@ CREATE TABLE `reservas` (
   `importe_salon` decimal(10,2) NOT NULL,
   `importe_total` decimal(10,2) NOT NULL,
   `recordatorio_enviado` tinyint(1) NOT NULL DEFAULT 0,
+  `confirmacion_enviada` tinyint(1) NOT NULL DEFAULT 0,
   `creado` timestamp NOT NULL DEFAULT current_timestamp(),
   `modificado` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `activo` tinyint(1) NOT NULL DEFAULT 1,

@@ -34,7 +34,7 @@ INSERT INTO `usuarios` (`nombre`, `apellido`, `nombre_usuario`, `email`, `contra
 INSERT INTO `reservas` (`reserva_id`, `fecha_reserva`, `salon_id`, `usuario_id`, `turno_id`, `importe_salon`, `importe_total`, `recordatorio_enviado`, `activo`) VALUES
 (1, '2025-10-20', 1, 1, 1, 15000.00, 15000.00, 0, 1), 
 (2, '2025-10-28', 2, 2, 2, 12000.50, 12000.50, 0, 1), 
-(3, '2025-11-10', 3, 3, 3, 18000.00, 18000.00, 0, 1), 
+(3, '2025-11-05', 3, 3, 3, 18000.00, 18000.00, 0, 1), 
 (4, '2025-11-25', 4, 4, 1, 25000.75, 25000.75, 0, 1),
 (5, '2025-12-05', 5, 5, 2, 16500.00, 16500.00, 0, 1);
 

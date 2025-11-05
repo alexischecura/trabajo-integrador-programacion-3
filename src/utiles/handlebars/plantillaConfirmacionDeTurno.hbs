@@ -1,48 +1,15 @@
-<!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Confirmación de Reserva</title>
-</head>
-<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin:0; padding:0;">
-  <table width="100%" cellspacing="0" cellpadding="0" style="background-color:#f9f9f9; padding:20px;">
-    <tr>
-      <td align="center">
-        <table width="600" cellpadding="20" cellspacing="0" style="background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
-          <tr>
-            <td align="center" style="background: linear-gradient(90deg, #ffafbd, #ffc3a0); border-radius:12px 12px 0 0; color:#fff; padding:30px;">
-              <h1 style="margin:0; font-size:26px;">🎉 Confirmación de Reserva 🎉</h1>
-            </td>
-          </tr>
-          <tr>
-            <td style="color:#333; font-size:16px; line-height:1.5;">
-              <p>Hola,</p>
-              <p>Tu reserva ha sido confirmada. Aquí están los detalles:</p>
-              <table width="100%" cellpadding="8" cellspacing="0" style="margin:20px 0; border-collapse:collapse;">
-                <tr style="background:#f1f1f1;">
-                  <td style="font-weight:bold; width:120px;">📅 Fecha:</td>
-                  <td>{{ fecha }}</td>
-                </tr>
-                <tr>
-                  <td style="font-weight:bold;">🏠 Salón:</td>
-                  <td>{{ salon }}</td>
-                </tr>
-                <tr style="background:#f1f1f1;">
-                  <td style="font-weight:bold;">⏰ Turno:</td>
-                  <td>{{ turno }}</td>
-                </tr>
-              </table>
-              <p style="margin-top:20px;">Te esperamos para que disfrutes un cumpleaños inolvidable. 🎂</p>
-            </td>
-          </tr>
-          <tr>
-            <td align="center" style="font-size:14px; color:#777; border-top:1px solid #eee; padding-top:15px;">
-              Casa de Cumpleaños · Dirección · Teléfono
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Confirmación de Reserva ProgIII Salones</title>
+  </head>
+  <body>
+    <h2 style="color: #2c5aa0;">Hola {{nombre}},</h2>
+    <p>Tu reserva en <strong>ProgIII Salones</strong> ha sido confirmada. Estamos preparando todo para que tu evento sea inolvidable.</p>
+    <h3 style="color: #2c5aa0; margin-top: 0;">📅 Detalles de tu Reserva</h3>
+    <p><strong>Fecha:</strong> {{fecha}}</p>
+    <p><strong>Hora:</strong> {{hora}}</p>
+    <p><strong>Salón:</strong> {{nombre_salon}}</p>
+    <h3 style="color: #2c5aa0; margin-top: 0;">¡Gracias por tu reserva!</h3>
+  </body>
 </html>
