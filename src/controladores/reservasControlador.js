@@ -20,7 +20,13 @@ export default class ReservasControlador {
         });
       }
 
-      const reservas = await this.reservas.buscarReservas(req.query);
+      const options = { ...req.query };
+
+      if (req.user.tipo_usuario === 'cliente') {
+        options.usuarioId = req.user.usuario_id;
+      }
+      
+      const reservas = await this.reservas.buscarReservas(options);
 
       cache.put(cacheKey, reservas, this.cacheDuration);
 
@@ -38,9 +44,10 @@ export default class ReservasControlador {
   buscarReservaPorId = async (req, res, next) => {
     try {
       const reserva = await this.reservas.buscarReservaPorId(
-        req.params.reserva_id
+        req.params.reserva_id,
+        req.user
       );
-      
+
       res.json({ estado: true, datos: reserva });
     } catch (error) {
       console.error('Error en GET /reservas/:id');
@@ -51,7 +58,7 @@ export default class ReservasControlador {
   crearReserva = async (req, res, next) => {
     try {
       const idNuevo = await this.reservas.crearReserva(req.body);
-      cache.clear(); 
+      cache.clear();
 
       res.status(201).json({
         estado: true,
@@ -65,10 +72,7 @@ export default class ReservasControlador {
 
   actualizarReserva = async (req, res, next) => {
     try {
-      await this.reservas.actualizarReserva(
-        req.params.reserva_id,
-        req.body
-      );
+      await this.reservas.actualizarReserva(req.params.reserva_id, req.body);
       cache.clear();
 
       res.json({
@@ -80,11 +84,11 @@ export default class ReservasControlador {
       next(error);
     }
   };
-  
+
   eliminarReserva = async (req, res, next) => {
     try {
       await this.reservas.eliminarReserva(req.params.reserva_id);
-      cache.clear();  
+      cache.clear();
       res.json({
         estado: true,
         mensaje: `Reserva con id ${req.params.reserva_id} eliminada correctamente`,

@@ -9,13 +9,30 @@ export default class Reservas {
       sortBy = 'reserva_id',
       order = 'ASC',
       importeTotalMax,
+      usuarioId,
     } = options;
 
     const offset = (page - 1) * limit;
 
-    let querySQL =
-      'SELECT reserva_id, fecha_reserva, salon_id, usuario_id, turno_id, foto_cumpleaniero, tematica, importe_salon, importe_total FROM reservas WHERE activo=1';
+    let querySQL = `SELECT 
+        reserva_id, 
+        fecha_reserva, 
+        salon_id, 
+        usuario_id, 
+        turno_id, 
+        foto_cumpleaniero, 
+        tematica, 
+        importe_salon, 
+        importe_total 
+      FROM reservas 
+      WHERE activo=1`;
+
     const values = [];
+    
+    if (usuarioId) {
+      querySQL += ' AND usuario_id = ?';
+      values.push(usuarioId);
+    }
 
     if (importeTotalMax) {
       querySQL += ' AND importe_total <= ?';
@@ -120,7 +137,6 @@ export default class Reservas {
 
     return resultado;
   };
-
 
   async actualizarReserva(reserva_id, datosFiltrados) {
     const campos = Object.keys(datosFiltrados);
