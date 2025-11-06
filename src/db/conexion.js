@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise';
+import mysql from "mysql2/promise";
 
 let conexion;
 
@@ -11,11 +11,11 @@ export const conectarDB = async () => {
       user: process.env.DB_USERNAME,
       database: process.env.DATABASE,
       password: process.env.DB_PASSWORD,
-      port: process.env.DB_PORT || 3307
+      port: process.env.DB_PORT || 3306,
     });
-    console.log('Base de datos conectada exitosamente.');
+    console.log("Base de datos conectada exitosamente.");
   } catch (error) {
-    console.error('Error al conectar a la base de datos:', error);
+    console.error("Error al conectar a la base de datos:", error);
     process.exit(1); // Detener la aplicación si no se puede conectar
   }
 };

@@ -9,7 +9,7 @@ const buscarReservasParaRecordatorio = async () => {
             r.reserva_id,
             r.fecha_reserva,
             t.hora_desde,
-            u.email,
+            u.nombre_usuario as email,
             u.nombre,
             s.titulo as nombre_salon
         FROM reservas r
