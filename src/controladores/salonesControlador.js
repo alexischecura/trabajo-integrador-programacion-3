@@ -1,7 +1,5 @@
-import { validationResult } from 'express-validator';
 import cache from 'memory-cache';
 import SalonesServicio from '../servicios/salonesServicio.js';
-import AppError from '../utiles/AppError.js';
 
 export default class SalonesControlador {
   constructor() {
