@@ -1,8 +1,15 @@
 import express from 'express';
-import { crearReservaValidations } from '../../validations/reservasValidations.js';
+
+import { allowRoles } from '../../middlewares/roleMiddleware.js';
 import { validarInputs } from '../../middlewares/validarInputs.js';
+import {
+  crearReservaValidations,
+  listarReservasValidations,
+  idParamReserva,
+  actualizarReservaValidations,
+} from '../../validations/reservasValidations.js';
 import ReservasControlador from '../../controladores/reservasControlador.js';
-import Reservas from '../../db/reservas.js';
+import Reservas from '../../db/reservas.js'; 
 
 
 const reservasControlador = new ReservasControlador();
@@ -90,6 +97,99 @@ const router = express.Router();
 /**
  * @swagger
  * /reservas:
+ *   get:
+ *     summary: Obtiene una lista de reservas con filtros, paginación y ordenación.
+ *     tags: [Reservas]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Número de página.
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Cantidad de resultados por página.
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           enum: [reserva_id, tematica, importe_salon, importe_total]
+ *         description: Campo por el cual ordenar.
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum: [ASC, DESC]
+ *         description: Dirección de la ordenación.
+ *       - in: query
+ *         name: importeTotalMin
+ *         schema:
+ *           type: integer
+ *         description: Filtrar por importe mínimo del reserva.
+ *       - in: query
+ *         name: importeTotalMax
+ *         schema:
+ *           type: number
+ *         description: Filtrar por importe máximo de reserva.
+ *     responses:
+ *       200:
+ *         description: Lista de reservas.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 estado:
+ *                   type: boolean
+ *                 origen:
+ *                   type: string
+ *                 datos:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Reserva'
+ */
+router.get(
+  '/',
+  listarReservasValidations,
+  validarInputs,
+  reservasControlador.buscarReservas
+);
+
+/**
+ * @swagger
+ * /salones/{salon_id}:
+ *   get:
+ *     summary: Obtiene un salón por su ID.
+ *     tags: [Salones]
+ *     parameters:
+ *       - in: path
+ *         name: salon_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del salón a buscar.
+ *     responses:
+ *       200:
+ *         description: Datos del salón encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Salon'
+ *       404:
+ *         description: Salón no encontrado.
+ */
+router.get(
+  '/:reserva_id',
+  idParamReserva,
+  validarInputs,
+  reservasControlador.buscarReservaPorId
+);
+
+/**
+ * @swagger
+ * /reservas:
  *   post:
  *     summary: Crea una nueva reserva.
  *     tags: [Reservas]
@@ -105,20 +205,89 @@ const router = express.Router();
  *       400:
  *         description: Datos de entrada inválidos.
  */
-router.post('/', crearReservaValidations, validarInputs, reservasControlador.crearReserva);
+router.post(
+  '/',
+  allowRoles('administrador', 'cliente'),
+  crearReservaValidations,
+  validarInputs,
+  reservasControlador.crearReserva
+);
 
+/**
+ * @swagger
+ * /reservas/{reserva_id}:
+ *   put:
+ *     summary: Actualiza una reserva existente.
+ *     tags: [Reservas]
+ *     parameters:
+ *       - in: path
+ *         name: reserva_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la reserva a actualizar.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Reserva'
+ *     responses:
+ *       200:
+ *         description: Reserva actualizada correctamente.
+ *       400:
+ *         description: Datos de entrada inválidos.
+ *       404:
+ *         description: Reserva no encontrada.
+ */
+
+router.put(
+  '/:reserva_id',
+  allowRoles('administrador'),
+  actualizarReservaValidations,
+  validarInputs,
+  reservasControlador.actualizarReserva
+);
+
+/**
+ * @swagger
+ * /reservas/{reserva_id}:
+ *   delete:
+ *     summary: Elimina una reserva (borrado lógico).
+ *     tags: [Reservas]
+ *     parameters:
+ *       - in: path
+ *         name: reserva_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la reserva a eliminar.
+ *     responses:
+ *       200:
+ *         description: Reserva eliminada correctamente.
+ *       404:
+ *         description: Reserva no encontrada.
+ */
+
+router.delete(
+  '/:reserva_id',
+  allowRoles('administrador'),
+  idParamReserva,
+  validarInputs,
+  reservasControlador.eliminarReserva
+);
+
+// [[TODO]] Mover reservasDb a la capa servicio
 
 router.get('/exportar/csv', async (req, res, next) => {
   try {
-    const csv = await reservasDb.exportarCSV();
+    const csv = await reservasDb.exportarCSV(); 
     res.header('Content-Type', 'text/csv');
     res.attachment('reporte-reservas.csv');
     res.send(csv);
   } catch (error) {
-
     next(error);
   }
 });
-
 
 export { router };

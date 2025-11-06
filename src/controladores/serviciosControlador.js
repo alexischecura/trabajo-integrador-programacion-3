@@ -75,14 +75,6 @@ export default class ServiciosControlador {
       );
       cache.clear(); 
 
-      if (actualizado === null) {
-        return res.status(400).json({
-          estado: false,
-          mensaje: `No hay datos válidos para actualizar o servicio con id ${servicio_id} no encontrado`,
-        });
-      }
-
-
       res.json({
         estado: true,
         mensaje: `Servicio con id ${servicio_id} actualizado correctamente`,
