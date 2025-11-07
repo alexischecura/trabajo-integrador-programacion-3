@@ -39,10 +39,10 @@ export const procesarRecordatorios = async () => {
 
     for (const reserva of reservas) {
         try {
-            console.log(`Enviando recordatorio para la reserva ${reserva.reserva_id} al email ${reserva.email}`);
+            console.log(`Enviando recordatorio para la reserva ${reserva.reserva_id} al email ${reserva.nombre_usuario}`);
             
             const emailOptions = {
-                to: reserva.email,
+                to: reserva.nombre_usuario,
                 subject: 'Recordatorio de tu reserva',
                 template: 'plantillaRecordatorio',
                 context: {
