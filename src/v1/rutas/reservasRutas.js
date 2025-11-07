@@ -9,11 +9,8 @@ import {
   actualizarReservaValidations,
 } from '../../validations/reservasValidations.js';
 import ReservasControlador from '../../controladores/reservasControlador.js';
-import Reservas from '../../db/reservas.js'; 
-
 
 const reservasControlador = new ReservasControlador();
-const reservasDb = new Reservas();
 
 const router = express.Router();
 
@@ -277,17 +274,16 @@ router.delete(
   reservasControlador.eliminarReserva
 );
 
-// [[TODO]] Mover reservasDb a la capa servicio
+router.get(
+  '/informe/csv',
+  allowRoles('administrador'),
+  reservasControlador.exportarCSV
+);
 
-router.get('/exportar/csv', async (req, res, next) => {
-  try {
-    const csv = await reservasDb.exportarCSV(); 
-    res.header('Content-Type', 'text/csv');
-    res.attachment('reporte-reservas.csv');
-    res.send(csv);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get(
+  '/informe/pdf',
+  allowRoles('administrador'),
+  reservasControlador.exportarPDF
+);
 
 export { router };

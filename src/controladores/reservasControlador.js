@@ -9,7 +9,9 @@ export default class ReservasControlador {
 
   buscarReservas = async (req, res, next) => {
     try {
-      const cacheKey = `reservas_${JSON.stringify(req.query)}`;
+      const cacheKey = `reservas_${JSON.stringify(req.query)}_${
+        req.user.usuario_id
+      }`;
       const cachedData = cache.get(cacheKey);
 
       if (cachedData) {
@@ -25,7 +27,7 @@ export default class ReservasControlador {
       if (req.user.tipo_usuario === 'cliente') {
         options.usuarioId = req.user.usuario_id;
       }
-      
+
       const reservas = await this.reservas.buscarReservas(options);
 
       cache.put(cacheKey, reservas, this.cacheDuration);
@@ -57,6 +59,10 @@ export default class ReservasControlador {
 
   crearReserva = async (req, res, next) => {
     try {
+      if (req.user.tipo_usuario === 'cliente') {
+        req.body.usuario_id = req.user.usuario_id;
+      }
+
       const idNuevo = await this.reservas.crearReserva(req.body);
       cache.clear();
 
@@ -95,6 +101,30 @@ export default class ReservasControlador {
       });
     } catch (error) {
       console.error('Error en DELETE /reservas/:id');
+      next(error);
+    }
+  };
+
+  exportarCSV = async (req, res, next) => {
+    try {
+      const csv = await this.reservas.exportarCSV();
+      res.header('Content-Type', 'text/csv');
+      res.attachment('informe-reservas.csv');
+      res.status(200).send(csv);
+    } catch (error) {
+      console.log('Error en GET /exportar/csv');
+      next(error);
+    }
+  };
+
+  exportarPDF = async (req, res, next) => {
+    try {
+      const pdf = await this.reservas.exportarPDF();
+      res.header('Content-Type', 'application/pdf');
+      res.attachment('informe-reservas.pdf');
+      res.status(200).send(pdf);
+    } catch (error) {
+      console.log('Error en GET /exportar/pdf');
       next(error);
     }
   };

@@ -2,10 +2,11 @@ import Usuarios from '../db/usuarios.js';
 import AppError from '../utiles/AppError.js';
 
 const TIPOS_DE_USUARIO = {
-  administrador: 1,
-  empleado: 2,
-  cliente: 3,
+  1: 'administrador',
+  2: 'empleado',
+  3: 'cliente',
 };
+
 import bcrypt from 'bcrypt';
 
 export default class UsuariosServicio {
@@ -14,7 +15,7 @@ export default class UsuariosServicio {
   }
 
   buscarUsuarios = (options) => {
-    if (options.tipoUsuario) {
+    if (options.tipoUsuario && typeof options.tipoUsuario === 'integer') {
       options.tipoUsuario = TIPOS_DE_USUARIO[options.tipoUsuario] || null;
     }
 

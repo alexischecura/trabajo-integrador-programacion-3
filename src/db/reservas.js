@@ -28,7 +28,7 @@ export default class Reservas {
       WHERE activo=1`;
 
     const values = [];
-    
+
     if (usuarioId) {
       querySQL += ' AND usuario_id = ?';
       values.push(usuarioId);
@@ -169,31 +169,64 @@ export default class Reservas {
     return resultado;
   };
 
-  /**
-   * Obtiene todas las reservas y las convierte a formato CSV.
-   * @returns {Promise<string>} Una cadena de texto en formato CSV.
-   */
-  exportarCSV = async () => {
-    const [reservas] = await conexion.query('SELECT * FROM reservas');
+  informe = async () => {
+    const [informeReservas] = await conexion.execute('CALL informe_reservas()');
 
-    if (reservas.length === 0) {
-      throw new Error('No hay reservas para exportar.');
-    }
+    return informeReservas[0];
+  };
 
-    const fields = [
-      'id',
-      'usuario_id',
-      'salon_id',
-      'fecha_reserva',
-      'hora_inicio',
-      'hora_fin',
-      'estado',
-      'creada_en',
-    ];
+  buscarReservasParaConfirmacion = async () => {
+    const [rows] = await conexion.query(`
+        SELECT 
+            r.reserva_id,
+            r.fecha_reserva,
+            t.hora_desde,
+            u.nombre_usuario,
+            u.nombre,
+            s.titulo as nombre_salon
+        FROM reservas r
+        JOIN usuarios u ON r.usuario_id = u.usuario_id
+        JOIN turnos t ON r.turno_id = t.turno_id
+        JOIN salones s ON r.salon_id = s.salon_id
+        WHERE 
+            r.activo = 1 AND
+            r.confirmacion_enviada = 0;
+    `);
+    return rows;
+  };
 
-    const json2csvParser = new Parser({ fields });
-    const csv = json2csvParser.parse(reservas);
+  marcarConfirmacionComoEnviada = async (reservaId) => {
+    await conexion.query(
+      'UPDATE reservas SET confirmacion_enviada = 1 WHERE reserva_id = ?',
+      [reservaId]
+    );
+  };
 
-    return csv;
+  buscarReservasParaRecordatorio = async () => {
+    const [rows] = await conexion.query(`
+        SELECT 
+            r.reserva_id,
+            r.fecha_reserva,
+            t.hora_desde,
+            u.nombre_usuario,
+            u.nombre,
+            s.titulo as nombre_salon
+        FROM reservas r
+        JOIN usuarios u ON r.usuario_id = u.usuario_id
+        JOIN turnos t ON r.turno_id = t.turno_id
+        JOIN salones s ON r.salon_id = s.salon_id
+        WHERE 
+            r.activo = 1 AND
+            r.recordatorio_enviado = 0 AND
+            CONCAT(r.fecha_reserva, ' ', t.hora_desde) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 24 HOUR);
+    `);
+    return rows;
+  };
+
+  marcarRecordatorioComoEnviado = async (reservaId) => {
+    await conexion.query(
+      'UPDATE reservas SET recordatorio_enviado = 1 WHERE reserva_id = ?',
+      [reservaId]
+    );
   };
 }

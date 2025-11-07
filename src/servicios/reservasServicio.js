@@ -1,3 +1,11 @@
+import { Parser } from 'json2csv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { readFile } from 'fs/promises';
+import handlebars from 'handlebars';
+import puppeteer from 'puppeteer';
+
+
 import Reservas from '../db/reservas.js';
 import ReservasServicios from '../db/reservas_servicios.js';
 import AppError from '../utiles/AppError.js';
@@ -22,10 +30,7 @@ export default class ReservasServicio {
     if (user.tipo_usuario === 'cliente') {
       const reserva = resultado[0];
       if (reserva.usuario_id !== user.usuario_id) {
-        throw new AppError(
-          'No tienes permiso para ver esta reserva',
-          403
-        );
+        throw new AppError('No tienes permiso para ver esta reserva', 403);
       }
     }
 
@@ -175,5 +180,71 @@ export default class ReservasServicio {
     await this.buscarReservaPorId(reserva_id);
 
     return this.reservas.eliminarReserva(reserva_id);
+  };
+
+  exportarCSV = async () => {
+    const reservas = await this.reservas.informe();
+
+    const fields = [
+      { label: 'Fecha', value: 'fecha' },
+      { label: 'Tematica', value: 'tematica' },
+      { label: 'Salon', value: 'salon' },
+      { label: 'Turno', value: 'turno' },
+      { label: 'Importe Salon', value: 'importe_salon' },
+      { label: 'Importe Total', value: 'importe_total' },
+    ];
+
+    const json2csvParser = new Parser({ fields });
+    const csv = json2csvParser.parse(reservas);
+
+    return csv;
+  };
+
+  exportarPDF = async () => {
+    const reservas = await this.reservas.informe();
+
+    const _fileName = fileURLToPath(import.meta.url);
+    const _dirname = path.dirname(_fileName);
+    const rootDir = path.resolve(_dirname, '..');
+
+    const plantilla = path.join(
+      rootDir,
+      'utiles',
+      'handlebars',
+      'plantillaInformeReservas.hbs'
+    );
+
+    const datos = await readFile(plantilla, 'utf-8');
+
+    const template = handlebars.compile(datos);
+
+    const formattedReservas = reservas.map((r) => ({
+      ...r,
+      importe_salon_formato: Number(r.importe_salon).toLocaleString('es-AR', {
+        minimumFractionDigits: 2,
+      }),
+      importe_total_formato: Number(r.importe_total).toLocaleString('es-AR', {
+        minimumFractionDigits: 2,
+      }),
+    }));
+
+    const htmlContent = template({
+      reservas: formattedReservas,
+    });
+
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+    await page.emulateMediaType('print');
+
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: { top: '40px', right: '40px', bottom: '40px', left: '40px' },
+    });
+
+    await browser.close();
+    return pdfBuffer;
   };
 }

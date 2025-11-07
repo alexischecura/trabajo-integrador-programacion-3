@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe de Reservas</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; }
+    /* Título: Negrita y Fondo Celeste */
+    .title-container {
+      background-color: #ADD8E6; /* Celeste claro */
+      padding: 15px 40px;
+      margin-bottom: 20px;
+      text-align: center;
+      /* Asegura que el contenedor abarque todo el ancho de la página visible en el PDF */
+      width: 100%; 
+    }
+    .title {
+      font-size: 18pt;
+      font-weight: bold;
+      color: #000000;
+      margin: 0;
+    }
+    /* Tabla: Líneas de separación */
+    .data-table {
+      width: 90%;
+      margin: 0 auto;
+      border-collapse: collapse; 
+    }
+    .data-table th, .data-table td {
+      border: 1px solid #ccc; /* Líneas de separación */
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 10pt;
+    }
+    .data-table th {
+      background-color: #f0f0f0; 
+      font-weight: bold;
+    }
+    .right-align { text-align: right; }
+    /* Estilo para filas pares (opcional) */
+    .data-table tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <div class="title-container">
+    <h1 class="title">Informe de Reservas</h1>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Temática</th>
+        <th>Salón</th>
+        <th>Turno</th>
+        <th class="right-align">Importe Salón</th>
+        <th class="right-align">Importe Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each reservas}}
+        <tr>
+          <td>{{this.fecha}}</td>
+          <td>{{this.tematica}}</td>
+          <td>{{this.salon}}</td>
+          <td>{{this.turno}}</td>
+          <td class="right-align">{{this.importe_salon_formato}}</td>
+          <td class="right-align">{{this.importe_total_formato}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</body>
+</html>
