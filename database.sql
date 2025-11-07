@@ -128,6 +128,6 @@ END;
 
 CREATE USER IF NOT EXISTS 'reservas'@'%' IDENTIFIED BY '*reservas.25*';
 
-GRANT SELECT, INSERT, UPDATE ON reservas.* TO 'reservas'@'%';
+GRANT SELECT, INSERT, UPDATE, EXECUTE ON reservas.* TO 'reservas'@'%';
 
 FLUSH PRIVILEGES;

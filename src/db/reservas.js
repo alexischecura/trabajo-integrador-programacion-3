@@ -28,7 +28,7 @@ export default class Reservas {
       WHERE activo=1`;
 
     const values = [];
-    
+
     if (usuarioId) {
       querySQL += ' AND usuario_id = ?';
       values.push(usuarioId);
@@ -169,31 +169,9 @@ export default class Reservas {
     return resultado;
   };
 
-  /**
-   * Obtiene todas las reservas y las convierte a formato CSV.
-   * @returns {Promise<string>} Una cadena de texto en formato CSV.
-   */
-  exportarCSV = async () => {
-    const [reservas] = await conexion.query('SELECT * FROM reservas');
+  informe = async () => {
+    const [informeReservas] = await conexion.execute('CALL informe_reservas()');
 
-    if (reservas.length === 0) {
-      throw new Error('No hay reservas para exportar.');
-    }
-
-    const fields = [
-      'id',
-      'usuario_id',
-      'salon_id',
-      'fecha_reserva',
-      'hora_inicio',
-      'hora_fin',
-      'estado',
-      'creada_en',
-    ];
-
-    const json2csvParser = new Parser({ fields });
-    const csv = json2csvParser.parse(reservas);
-
-    return csv;
+    return informeReservas[0];
   };
 }
