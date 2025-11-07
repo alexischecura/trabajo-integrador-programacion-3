@@ -126,6 +126,20 @@ BEGIN
         r.activo = 1;
 END;  
 
+CREATE PROCEDURE sp_ingreso_por_periodo(
+    IN p_fecha_inicio DATE,
+    IN p_fecha_fin DATE
+)
+BEGIN
+    SELECT
+        SUM(r.importe_total) AS ingreso_total
+    FROM
+        reservas r
+    WHERE
+        r.fecha_reserva BETWEEN p_fecha_inicio AND p_fecha_fin
+        AND r.activo = 1;
+END;
+
 CREATE USER IF NOT EXISTS 'reservas'@'%' IDENTIFIED BY '*reservas.25*';
 
 GRANT SELECT, INSERT, UPDATE, EXECUTE ON reservas.* TO 'reservas'@'%';
