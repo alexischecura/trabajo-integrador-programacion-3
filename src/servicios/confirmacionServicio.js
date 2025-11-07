@@ -1,35 +1,12 @@
-import { conexion } from '../db/conexion.js';
+import Reservas from '../db/reservas.js';
 import NotificacionEmailServicio from './notificacionEmailServicio.js';
 
 const notificacionServicio = new NotificacionEmailServicio();
-
-const buscarReservasParaConfirmacion = async () => {
-    const [rows] = await conexion.query(`
-        SELECT 
-            r.reserva_id,
-            r.fecha_reserva,
-            t.hora_desde,
-            u.nombre_usuario,
-            u.nombre,
-            s.titulo as nombre_salon
-        FROM reservas r
-        JOIN usuarios u ON r.usuario_id = u.usuario_id
-        JOIN turnos t ON r.turno_id = t.turno_id
-        JOIN salones s ON r.salon_id = s.salon_id
-        WHERE 
-            r.activo = 1 AND
-            r.confirmacion_enviada = 0;
-    `);
-    return rows;
-};
-
-const marcarConfirmacionComoEnviada = async (reservaId) => {
-    await conexion.query('UPDATE reservas SET confirmacion_enviada = 1 WHERE reserva_id = ?', [reservaId]);
-};
+const reservasDb = new Reservas();
 
 export const procesarConfirmaciones = async () => {
     console.log('Iniciando proceso de confirmaciones...');
-    const reservas = await buscarReservasParaConfirmacion();
+    const reservas = await reservasDb.buscarReservasParaConfirmacion();
 
     if (reservas.length === 0) {
         console.log('No hay confirmaciones para enviar.');
@@ -53,7 +30,7 @@ export const procesarConfirmaciones = async () => {
             };
 
             await notificacionServicio.enviar(emailOptions);
-            await marcarConfirmacionComoEnviada(reserva.reserva_id);
+            await reservasDb.marcarConfirmacionComoEnviada(reserva.reserva_id);
             
             console.log(`Confirmación enviada exitosamente para la reserva ${reserva.reserva_id}.`);
 

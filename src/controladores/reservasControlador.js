@@ -59,6 +59,10 @@ export default class ReservasControlador {
 
   crearReserva = async (req, res, next) => {
     try {
+      if (req.user.tipo_usuario === 'cliente') {
+        req.body.usuario_id = req.user.usuario_id;
+      }
+
       const idNuevo = await this.reservas.crearReserva(req.body);
       cache.clear();
 

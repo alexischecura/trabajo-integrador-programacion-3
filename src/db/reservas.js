@@ -174,4 +174,59 @@ export default class Reservas {
 
     return informeReservas[0];
   };
+
+  buscarReservasParaConfirmacion = async () => {
+    const [rows] = await conexion.query(`
+        SELECT 
+            r.reserva_id,
+            r.fecha_reserva,
+            t.hora_desde,
+            u.nombre_usuario,
+            u.nombre,
+            s.titulo as nombre_salon
+        FROM reservas r
+        JOIN usuarios u ON r.usuario_id = u.usuario_id
+        JOIN turnos t ON r.turno_id = t.turno_id
+        JOIN salones s ON r.salon_id = s.salon_id
+        WHERE 
+            r.activo = 1 AND
+            r.confirmacion_enviada = 0;
+    `);
+    return rows;
+  };
+
+  marcarConfirmacionComoEnviada = async (reservaId) => {
+    await conexion.query(
+      'UPDATE reservas SET confirmacion_enviada = 1 WHERE reserva_id = ?',
+      [reservaId]
+    );
+  };
+
+  buscarReservasParaRecordatorio = async () => {
+    const [rows] = await conexion.query(`
+        SELECT 
+            r.reserva_id,
+            r.fecha_reserva,
+            t.hora_desde,
+            u.nombre_usuario,
+            u.nombre,
+            s.titulo as nombre_salon
+        FROM reservas r
+        JOIN usuarios u ON r.usuario_id = u.usuario_id
+        JOIN turnos t ON r.turno_id = t.turno_id
+        JOIN salones s ON r.salon_id = s.salon_id
+        WHERE 
+            r.activo = 1 AND
+            r.recordatorio_enviado = 0 AND
+            CONCAT(r.fecha_reserva, ' ', t.hora_desde) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 24 HOUR);
+    `);
+    return rows;
+  };
+
+  marcarRecordatorioComoEnviado = async (reservaId) => {
+    await conexion.query(
+      'UPDATE reservas SET recordatorio_enviado = 1 WHERE reserva_id = ?',
+      [reservaId]
+    );
+  };
 }
