@@ -12,11 +12,21 @@ export default class ReservasServicio {
     return this.reservas.buscarReservas(options);
   };
 
-  buscarReservaPorId = async (reserva_id) => {
+  buscarReservaPorId = async (reserva_id, user) => {
     const resultado = await this.reservas.buscarReservaPorId(reserva_id);
 
     if (resultado.length === 0) {
       throw new AppError(`Reserva con id ${reserva_id} no encontrada`, 404);
+    }
+
+    if (user.tipo_usuario === 'cliente') {
+      const reserva = resultado[0];
+      if (reserva.usuario_id !== user.usuario_id) {
+        throw new AppError(
+          'No tienes permiso para ver esta reserva',
+          403
+        );
+      }
     }
 
     const r = resultado[0];
