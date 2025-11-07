@@ -1,5 +1,5 @@
 -- Usar la base de datos del proyecto
-USE `prog3_integrador`;
+USE `reservas`;
 
 
 INSERT INTO `turnos` (`orden`, `hora_desde`, `hora_hasta`) VALUES

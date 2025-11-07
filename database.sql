@@ -1,7 +1,7 @@
-CREATE DATABASE IF NOT EXISTS `prog3_integrador` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS `reservas` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Usar la base de datos
-USE `prog3_integrador`;
+USE `reservas`;
 
 
 CREATE TABLE `salones` (
@@ -108,3 +108,26 @@ BEGIN
     GROUP BY s.salon_id, s.titulo
     ORDER BY total_reservas DESC;
 END;
+
+CREATE PROCEDURE informe_reservas()
+BEGIN
+    SELECT
+        DATE_FORMAT(r.fecha_reserva, '%d/%m/%Y') AS fecha,
+        r.tematica AS tematica,
+        s.titulo AS salon,
+        CONCAT(t.hora_desde, ' - ', t.hora_hasta) AS turno,
+        r.importe_salon,
+        r.importe_total 
+    FROM
+        reservas r
+    JOIN salones s ON r.salon_id = s.salon_id
+    JOIN turnos t ON r.turno_id = t.turno_id
+    WHERE
+        r.activo = 1;
+END;  
+
+CREATE USER IF NOT EXISTS 'reservas'@'%' IDENTIFIED BY '*reservas.25*';
+
+GRANT SELECT, INSERT, UPDATE ON reservas.* TO 'reservas'@'%';
+
+FLUSH PRIVILEGES;
