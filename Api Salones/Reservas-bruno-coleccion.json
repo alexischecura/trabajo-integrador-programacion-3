@@ -4,6 +4,93 @@
   "items": [
     {
       "type": "folder",
+      "name": "Auth",
+      "filename": "Auth",
+      "seq": 5,
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Auth",
+          "seq": 5
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Login",
+          "filename": "Login.bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/auth/login",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"nombre_usuario\": \"dvader@example.com\",\n  \"contrasenia\": \"password123\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "res": "let data = res.body;\nbru.setEnvVar(\"token\", data.token);\n"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Registro",
+          "filename": "Registro.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/auth/registro",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"nombre_usuario\": \"alexischecura@gmail.com\",\n  \"contrasenia\": \"password123\",\n  \"nombre\": \"Alexis\",\n  \"apellido\": \"Checura\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {
+              "res": "let data = res.body;\nbru.setEnvVar(\"token\", data.token);\n"
+            },
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
       "name": "Reservas",
       "filename": "Reservas",
       "seq": 2,
@@ -21,9 +108,48 @@
       "items": [
         {
           "type": "http",
-          "name": "Crear Reserva",
-          "filename": "Crear Reserva.bru",
-          "seq": 3,
+          "name": "Actualizar reserva",
+          "filename": "Actualizar reserva.bru",
+          "seq": 5,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/reservas/:reserva_id",
+            "method": "PUT",
+            "headers": [],
+            "params": [
+              {
+                "name": "reserva_id",
+                "value": "29",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"fecha_reserva\": \"2025-11-08\",\n  \"salon_id\": 1,\n  \"usuario_id\": 2,\n  \"turno_id\": 1,\n  \"importe_salon\": \"100000\",\n  \"foto_cumpleaniero\": null,\n  \"tematica\": \"Dragon Ball Z\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Crear reserva",
+          "filename": "Crear reserva.bru",
+          "seq": 4,
           "settings": {
             "encodeUrl": true,
             "timeout": 0
@@ -36,7 +162,45 @@
             "params": [],
             "body": {
               "mode": "json",
-              "json": "{\n  \"fecha_reserva\": \"2025-12-31\",\n  \"salon_id\": 1,\n  \"usuario_id\": 1,\n  \"turno_id\": 1,\n  \"foto_cumpleaniero\": null,\n  \"tematica\": \"Navidad\",\n  \"importe_salon\": 15000.00,\n  \"importe_total\": 15000.00\n}",
+              "json": "{\n  \"fecha_reserva\": \"2025-11-08\",\n  \"salon_id\": 2,\n  \"usuario_id\": 3,\n  \"turno_id\": 1,\n  \"foto_cumpleaniero\": \"https://dummyjson.com/icon/emilys/128\",\n  \"tematica\": \"fútbol\",\n  \"importe_salon\": \"95000\",\n  \"servicios\": [\n    {\n      \"servicio_id\": 1,\n      \"importe\": \"5000.00\"\n    },\n    {\n      \"servicio_id\": 2,\n      \"importe\": \"15000.00\"\n    }\n  ]\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Eliminar reserva",
+          "filename": "Eliminar reserva.bru",
+          "seq": 6,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/reservas/:reserva_id",
+            "method": "DELETE",
+            "headers": [],
+            "params": [
+              {
+                "name": "reserva_id",
+                "value": "26",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
               "formUrlEncoded": [],
               "multipartForm": [],
               "file": []
@@ -55,7 +219,7 @@
           "type": "http",
           "name": "Notificación",
           "filename": "Notificación.bru",
-          "seq": 2,
+          "seq": 3,
           "settings": {
             "encodeUrl": true,
             "timeout": 0
@@ -69,6 +233,112 @@
             "body": {
               "mode": "json",
               "json": "{\n  \"fecha\": \"29/09/2025\",\n  \"salon\": \"Salón 1\",\n  \"turno\": \"16:30\",\n  \"correoDestino\": \"alexischecura@gmail.com\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener reserva",
+          "filename": "Obtener reserva.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/reservas/:reserva_id",
+            "method": "GET",
+            "headers": [
+              {
+                "name": "",
+                "value": "",
+                "enabled": true
+              }
+            ],
+            "params": [
+              {
+                "name": "reserva_id",
+                "value": "4",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener reservas",
+          "filename": "Obtener reservas.bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/reservas?page=1",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "page",
+                "value": "1",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "importeTotalMax",
+                "value": "40000",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "sortBy",
+                "value": "tematica",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "order",
+                "value": "desc",
+                "type": "query",
+                "enabled": false
+              },
+              {
+                "name": "limit",
+                "value": "3",
+                "type": "query",
+                "enabled": false
+              }
+            ],
+            "body": {
+              "mode": "none",
               "formUrlEncoded": [],
               "multipartForm": [],
               "file": []
@@ -119,14 +389,14 @@
             "params": [
               {
                 "name": "salon_id",
-                "value": "13",
+                "value": "6",
                 "type": "path",
                 "enabled": true
               }
             ],
             "body": {
               "mode": "json",
-              "json": "{\n  \"titulo\": \"Salón Amarillo\",\n  \"direccion\": \"Ruta 123\",\n  \"capacidad\": 50,\n  \"latitud\": 50.3,\n  \"longitud\": 50.3  \n}",
+              "json": "{\n  \"titulo\": \"Salón Amarillo\",\n  \"direccion\": \"Ruta 123\",\n  \"capacidad\": 50,\n  \"latitud\": 50.3,\n  \"longitud\": 50.3,\n  \"salon_id\": 88\n}",
               "formUrlEncoded": [],
               "multipartForm": [],
               "file": []
@@ -145,7 +415,7 @@
           "type": "http",
           "name": "Crear un salón",
           "filename": "Crear un salón.bru",
-          "seq": 3,
+          "seq": 2,
           "settings": {
             "encodeUrl": true,
             "timeout": 0
@@ -169,7 +439,10 @@
             "tests": "",
             "docs": "",
             "auth": {
-              "mode": "inherit"
+              "mode": "bearer",
+              "bearer": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo2LCJ0aXBvX3VzdWFyaW8iOiJhZG1pbmlzdHJhZG9yIiwiaWF0IjoxNzYyMzE1MDEzLCJleHAiOjE3NjIzNDM4MTN9.aWQRp4VwWeE3-nnJqcRwF8BIvVEWiFhCI62llTLrxmY"
+              }
             }
           }
         },
@@ -215,14 +488,14 @@
           "type": "http",
           "name": "Obtener salones",
           "filename": "Obtener salones.bru",
-          "seq": 2,
+          "seq": 1,
           "settings": {
             "encodeUrl": true,
             "timeout": 0
           },
           "tags": [],
           "request": {
-            "url": "{{apiURL}}/salones?page=1&order=desc",
+            "url": "{{apiURL}}/salones?page=1",
             "method": "GET",
             "headers": [],
             "params": [
@@ -236,7 +509,7 @@
                 "name": "order",
                 "value": "desc",
                 "type": "query",
-                "enabled": true
+                "enabled": false
               },
               {
                 "name": "limit",
@@ -296,7 +569,7 @@
             "params": [
               {
                 "name": "salon_id",
-                "value": "13",
+                "value": "1",
                 "type": "path",
                 "enabled": true
               }
@@ -462,7 +735,7 @@
             "params": [
               {
                 "name": "servicio_id",
-                "value": "15",
+                "value": "2",
                 "type": "path",
                 "enabled": true
               }
@@ -494,7 +767,7 @@
           },
           "tags": [],
           "request": {
-            "url": "{{apiURL}}/servicios?page=1&limit=5&sortBy=importe&order=desc",
+            "url": "{{apiURL}}/servicios?page=1&limit=5",
             "method": "GET",
             "headers": [],
             "params": [
@@ -514,13 +787,13 @@
                 "name": "sortBy",
                 "value": "importe",
                 "type": "query",
-                "enabled": true
+                "enabled": false
               },
               {
                 "name": "order",
                 "value": "desc",
                 "type": "query",
-                "enabled": true
+                "enabled": false
               },
               {
                 "name": "importeMax",
@@ -529,6 +802,203 @@
                 "enabled": false
               }
             ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Turnos",
+      "filename": "Turnos",
+      "seq": 7,
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Turnos",
+          "seq": 7
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Actualizar turno",
+          "filename": "Actualizar turno.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/turnos/:turno_id",
+            "method": "PUT",
+            "headers": [],
+            "params": [
+              {
+                "name": "turno_id",
+                "value": "2",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"hora_desde\": \"15:06\",\n  \"hora_hasta\": \"16:00\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Crear un turno",
+          "filename": "Crear un turno.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/turnos",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"hora_desde\": \"21:00\",\n  \"hora_hasta\": \"24:00\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Eliminar turno",
+          "filename": "Eliminar turno.bru",
+          "seq": 5,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/turnos/:turnos_id",
+            "method": "DELETE",
+            "headers": [],
+            "params": [
+              {
+                "name": "turnos_id",
+                "value": "5",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener turno",
+          "filename": "Obtener turno.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/turnos/:turnos_id",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "turnos_id",
+                "value": "1",
+                "type": "path",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Obtener turnos",
+          "filename": "Obtener turnos.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/turnos",
+            "method": "GET",
+            "headers": [],
+            "params": [],
             "body": {
               "mode": "none",
               "formUrlEncoded": [],
@@ -577,20 +1047,41 @@
           "request": {
             "url": "{{apiURL}}/usuarios/:usuario_id",
             "method": "PUT",
-            "headers": [],
+            "headers": [
+              {
+                "name": "",
+                "value": "",
+                "enabled": true
+              }
+            ],
             "params": [
               {
                 "name": "usuario_id",
-                "value": "9",
+                "value": "1",
                 "type": "path",
                 "enabled": true
               }
             ],
             "body": {
-              "mode": "json",
-              "json": "{\n  \"nombre\": \"Pablo\",\n  \"apellido\": \"Rodriguez\",\n  \"nombre_usuario\": \"pabloRodriguez\",\n  \"contrasenia\": \"pablo1234\",\n  \"tipo_usuario\": \"cliente\",\n  \"celular\": \"261555555\",\n  \"foto\": \"https://dummyjson.com/icon/michaelw/128\"\n}",
+              "mode": "multipartForm",
+              "json": "{\n  \"nombre\": \"Pablo\",\n  \"apellido\": \"Rodriguez\",\n  \"nombre_usuario\": \"pabloRodriguez\",\n  \"contrasenia\": \"pablo1234\",\n  \"tipo_usuario\": \"cliente\",\n  \"celular\": \"261555555\"\n}",
               "formUrlEncoded": [],
-              "multipartForm": [],
+              "multipartForm": [
+                {
+                  "type": "file",
+                  "name": "foto",
+                  "value": [
+                    "/home/alx/Pictures/Wallpapers/lwalpapers/b-086.jpg"
+                  ],
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "nombre",
+                  "value": "\"test\"",
+                  "enabled": true
+                }
+              ],
               "file": []
             },
             "script": {},
@@ -620,7 +1111,7 @@
             "params": [],
             "body": {
               "mode": "json",
-              "json": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"nombre_usuario\": \"juanPerez\",\n  \"contrasenia\": \"juan12345\",\n  \"tipo_usuario\": \"cliente\",\n  \"celular\": \"+5491112345678\",\n  \"foto\": \"https://dummyjson.com/icon/michaelw/128\"\n}",
+              "json": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"nombre_usuario\": \"juanperez34@example.com\",\n  \"contrasenia\": \"juan12345\",\n  \"tipo_usuario\": \"cliente\",\n  \"celular\": \"+5491112345678\",\n  \"foto\": \"https://dummyjson.com/icon/michaelw/128\"\n}",
               "formUrlEncoded": [],
               "multipartForm": [],
               "file": []
@@ -722,13 +1213,13 @@
           },
           "tags": [],
           "request": {
-            "url": "{{apiURL}}/usuarios?page=1&order=desc",
+            "url": "{{apiURL}}/usuarios?page=2&order=desc",
             "method": "GET",
             "headers": [],
             "params": [
               {
                 "name": "page",
-                "value": "1",
+                "value": "2",
                 "type": "query",
                 "enabled": true
               },
@@ -774,9 +1265,153 @@
           }
         }
       ]
+    },
+    {
+      "type": "folder",
+      "name": "Reportes",
+      "filename": "Reportes",
+      "seq": 7,
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Reportes",
+          "seq": 7
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Salones Populares",
+          "filename": "Salones Populares.bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/reportes/salones-populares",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Ingreso por periodo",
+          "filename": "Ingreso por periodo.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/reportes/ingreso-por-periodo",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"fecha_inicio\": \"2025-11-29\",\n  \"fecha_fin\": \"2025-11-30\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Informe Reservas CSV",
+          "filename": "Informe Reservas CSV.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/reservas/informe/csv",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Informe Reservas PDF",
+          "filename": "Informe Reservas PDF.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "request": {
+            "url": "{{apiURL}}/reservas/informe/pdf",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
     }
   ],
-  "activeEnvironmentUid": "qY81N6cTyjGqjWz6Ybk6M",
+  "activeEnvironmentUid": "6IyTrW35Y2xRykjdjTDTt",
   "environments": [
     {
       "variables": [
@@ -786,11 +1421,28 @@
           "enabled": true,
           "secret": false,
           "type": "text"
+        },
+        {
+          "name": "token",
+          "value": "",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
         }
       ],
       "name": "Reserva de salones"
     }
   ],
+  "root": {
+    "request": {
+      "auth": {
+        "mode": "bearer",
+        "bearer": {
+          "token": "{{token}}"
+        }
+      }
+    }
+  },
   "brunoConfig": {
     "version": "1",
     "name": "Reservas",
@@ -799,7 +1451,7 @@
       "node_modules",
       ".git"
     ],
-    "size": 0.0045490264892578125,
-    "filesCount": 21
+    "size": 0.008456230163574219,
+    "filesCount": 36
   }
 }
