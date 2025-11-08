@@ -27,7 +27,7 @@ export default class ReservasServicio {
       throw new AppError(`Reserva con id ${reserva_id} no encontrada`, 404);
     }
 
-    if (user.tipo_usuario === 'cliente') {
+    if (user?.tipo_usuario === 'cliente') {
       const reserva = resultado[0];
       if (reserva.usuario_id !== user.usuario_id) {
         throw new AppError('No tienes permiso para ver esta reserva', 403);

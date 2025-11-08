@@ -1,12 +1,6 @@
 import Usuarios from '../db/usuarios.js';
 import AppError from '../utiles/AppError.js';
 
-const TIPOS_DE_USUARIO = {
-  1: 'administrador',
-  2: 'empleado',
-  3: 'cliente',
-};
-
 import bcrypt from 'bcrypt';
 
 export default class UsuariosServicio {
@@ -15,10 +9,6 @@ export default class UsuariosServicio {
   }
 
   buscarUsuarios = (options) => {
-    if (options.tipoUsuario && typeof options.tipoUsuario === 'integer') {
-      options.tipoUsuario = TIPOS_DE_USUARIO[options.tipoUsuario] || null;
-    }
-
     return this.usuarios.buscarUsuarios(options);
   };
 
@@ -41,8 +31,6 @@ export default class UsuariosServicio {
     if (existente) {
       throw new AppError('El nombre de usuario ya está en uso', 400);
     }
-    datos.tipo_usuario =
-      TIPOS_DE_USUARIO[datos.tipo_usuario] || TIPOS_DE_USUARIO.cliente;
 
     const hash = await bcrypt.hash(datos.contrasenia, 10);
 
